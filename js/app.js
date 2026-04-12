@@ -134,11 +134,8 @@ async function init() {
     Dom.navLinks.forEach((l) => l.classList.toggle('active', l.dataset.filter === state.currentFilter));
     Dom.filterChips.forEach((c) => c.classList.toggle('active', c.dataset.filter === state.currentFilter));
   }
-  if (session.lastFilmId) {
-    const lastFilm = state.catalog.find((f) => f.id === session.lastFilmId);
-    if (lastFilm) openModal(lastFilm);
-  }
 }
+
 
 /* ============================================
    STRUCTURED DATA (JSON-LD)
@@ -290,6 +287,11 @@ function renderGrid(container, films) {
   // attach click handlers + stagger entry animation
   container.querySelectorAll('.film-card').forEach((card, i) => {
     card.style.animationDelay = `${Math.min(i * 40, 480)}ms`;
+    card.classList.add('is-entering');
+    card.addEventListener('animationend', () => {
+      card.classList.remove('is-entering');
+      card.style.animationDelay = '';
+    }, { once: true });
     const id = card.dataset.id;
     const film = state.catalog.find((f) => f.id === id);
     if (!film) return;
@@ -297,6 +299,21 @@ function renderGrid(container, films) {
     card.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openModal(film); }
     });
+
+    // prefetch embed on first hover/focus to shorten time-to-play
+    let prefetched = false;
+    const prefetch = () => {
+      if (prefetched) return;
+      prefetched = true;
+      if (film.source !== 'youtube') return;
+      const link = document.createElement('link');
+      link.rel = 'prefetch';
+      link.as = 'document';
+      link.href = `https://www.youtube-nocookie.com/embed/${film.videoId}?rel=0`;
+      document.head.appendChild(link);
+    };
+    card.addEventListener('mouseenter', prefetch, { once: true });
+    card.addEventListener('focusin', prefetch, { once: true });
   });
 }
 
@@ -385,7 +402,7 @@ function renderContinueWatching() {
    ============================================ */
 function openModal(film) {
   state.currentFilm = film;
-  Storage.saveSession({ filter: state.currentFilter, lastFilmId: film.id });
+  Storage.saveSession({ filter: state.currentFilter });
 
   // populate metadata
   Dom.modalTitle.textContent = film.title;
@@ -463,11 +480,13 @@ function openModal(film) {
     }
   });
 
-  // fade out loading poster when video starts playing
-  player.once('playing', () => {
+  // fade out loading poster once the player iframe is ready
+  const removePoster = () => {
     posterEl.style.opacity = '0';
     setTimeout(() => posterEl.remove(), 320);
-  });
+  };
+  player.once('ready', () => setTimeout(removePoster, 150));
+  player.once('playing', removePoster);
 
   Dom.modal.showModal();
   Dom.modal.focus();
@@ -542,7 +561,7 @@ function bindEvents() {
 
 function setFilter(filter) {
   state.currentFilter = filter;
-  Storage.saveSession({ filter, lastFilmId: state.currentFilm?.id });
+  Storage.saveSession({ filter });
   renderFilteredGrid();
   // scroll to main grid
   const mainGrid = document.querySelector('.catalog-main');

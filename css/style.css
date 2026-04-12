@@ -882,6 +882,9 @@ dialog.film-modal::backdrop {
   to   { opacity: 1; transform: none; }
 }
 .film-card {
+  animation: none;
+}
+.film-card.is-entering {
   animation: card-in 0.32s ease-out both;
 }
 
