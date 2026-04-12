@@ -244,6 +244,29 @@ button {
   filter: brightness(0.55);
 }
 
+/* Muted autoplay video background (fades in over the thumbnail) */
+.hero-video {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+.hero-video.is-playing { opacity: 1; }
+.hero-video iframe {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  /* keep 16:9 covering the hero regardless of aspect ratio */
+  width: max(100%, calc(100vh * 1.778));
+  height: max(100%, calc(100vw * 0.5625));
+  pointer-events: none;
+  border: 0;
+}
+
 .hero-overlay {
   position: absolute;
   inset: 0;
