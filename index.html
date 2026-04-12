@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Frame — A curated cinema platform for independent, open-source, and AI-generated films." />
+  <meta name="keywords" content="independent film, AI cinema, open source, Blender, Dust, Omeleto, short films, experimental" />
+  <meta name="author" content="Frame" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Frame — Curated Cinema" />
+  <meta property="og:description" content="A curated cinema platform for independent, open-source, and AI-generated films." />
+  <meta property="og:image" content="https://img.youtube.com/vi/YH3c1QZzRK4/maxresdefault.jpg" />
+
+  <!-- Structured Data: WebSite -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Frame",
+    "url": "https://frame.film",
+    "description": "A curated cinema platform for independent, open-source, and AI-generated films.",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://frame.film/search?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+
+  <!-- Structured Data: CollectionPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "Frame — Curated Cinema",
+    "description": "A curated cinema platform for independent, open-source, and AI-generated films.",
+    "url": "https://frame.film",
+    "inLanguage": "en",
+    "about": {
+      "@type": "Thing",
+      "name": "Short Films"
+    }
+  }
+  </script>
+
+  <!-- Structured Data: VideoObject list (populated dynamically by app.js) -->
+  <script type="application/ld+json" id="ld-catalog">{}</script>
+
+  <title>Frame — Curated Cinema</title>
+
+  <!-- Plyr CSS -->
+  <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
+
+  <!-- Main CSS -->
+  <link rel="stylesheet" href="css/style.css" />
+
+  <!-- Favicon placeholder -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎬</text></svg>" />
+</head>
+<body>
+
+  <!-- ===================== HEADER ===================== -->
+  <header class="site-header" role="banner">
+    <div class="header-inner">
+      <a href="/" class="logo" aria-label="Frame — Go to homepage">
+        <span class="logo-icon" aria-hidden="true">▣</span>
+        <span class="logo-text">Frame</span>
+      </a>
+
+      <nav class="main-nav" aria-label="Primary navigation">
+        <ul role="list">
+          <li><a href="#" class="nav-link active" data-filter="all">All Films</a></li>
+          <li><a href="#" class="nav-link" data-filter="ai">AI Cinema</a></li>
+          <li><a href="#" class="nav-link" data-filter="animation">Animation</a></li>
+          <li><a href="#" class="nav-link" data-filter="experimental">Experimental</a></li>
+          <li><a href="#" class="nav-link" data-filter="open">Open Source</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <button class="btn-search" aria-label="Search films" aria-expanded="false">
+          <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+        <button class="btn-toggle-ai" aria-pressed="false" title="Toggle AI Films only">
+          <span class="toggle-label">AI</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Search bar (hidden by default) -->
+    <div class="search-bar" role="search" hidden>
+      <label for="search-input" class="sr-only">Search films</label>
+      <input type="search" id="search-input" placeholder="Search films, directors, themes…" autocomplete="off" />
+      <button class="btn-search-close" aria-label="Close search">✕</button>
+    </div>
+  </header>
+
+  <!-- =================== HERO / FEATURED =================== -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-bg" id="hero-bg" aria-hidden="true"></div>
+    <div class="hero-overlay" aria-hidden="true"></div>
+    <div class="hero-content">
+      <div class="hero-meta">
+        <span class="badge badge-featured" aria-label="Staff Pick">★ Staff Pick</span>
+        <span class="badge badge-category" id="hero-category"></span>
+      </div>
+      <h1 class="hero-title" id="hero-title"></h1>
+      <p class="hero-description" id="hero-description"></p>
+      <div class="hero-info" id="hero-info"></div>
+      <div class="hero-actions">
+        <button class="btn-play-hero" id="btn-play-hero" aria-label="Play featured film">
+          <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+          Play
+        </button>
+        <button class="btn-more-info" id="btn-more-info" aria-label="More info">
+          More Info
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================== MAIN CATALOG =================== -->
+  <main id="main-content" tabindex="-1">
+
+    <!-- Filter bar (mobile) -->
+    <div class="filter-bar" role="navigation" aria-label="Film categories">
+      <div class="filter-scroll">
+        <button class="filter-chip active" data-filter="all">All</button>
+        <button class="filter-chip" data-filter="ai">AI Cinema</button>
+        <button class="filter-chip" data-filter="animation">Animation</button>
+        <button class="filter-chip" data-filter="sci-fi">Sci-Fi</button>
+        <button class="filter-chip" data-filter="experimental">Experimental</button>
+        <button class="filter-chip" data-filter="open">Open Source</button>
+        <button class="filter-chip" data-filter="drama">Drama</button>
+        <button class="filter-chip" data-filter="short">Short Films</button>
+      </div>
+    </div>
+
+    <!-- Staff Picks row -->
+    <section class="catalog-row" aria-labelledby="row-staff-picks">
+      <h2 class="row-title" id="row-staff-picks">Staff Picks</h2>
+      <div class="film-grid" id="grid-staff-picks" role="list"></div>
+    </section>
+
+    <!-- Runway AI Film Festival row -->
+    <section class="catalog-row" aria-labelledby="row-runway">
+      <h2 class="row-title" id="row-runway">
+        <span class="ai-badge" aria-label="AI Generated">AI</span> Runway AI Film Festival
+      </h2>
+      <div class="film-grid" id="grid-runway" role="list"></div>
+    </section>
+
+    <!-- DUST row -->
+    <section class="catalog-row" aria-labelledby="row-dust">
+      <h2 class="row-title" id="row-dust">DUST</h2>
+      <div class="film-grid" id="grid-dust" role="list"></div>
+    </section>
+
+    <!-- Omeleto row -->
+    <section class="catalog-row" aria-labelledby="row-omeleto">
+      <h2 class="row-title" id="row-omeleto">Omeleto</h2>
+      <div class="film-grid" id="grid-omeleto" role="list"></div>
+    </section>
+
+    <!-- Blender Open Films row -->
+    <section class="catalog-row" aria-labelledby="row-open">
+      <h2 class="row-title" id="row-open">Open Source Films</h2>
+      <div class="film-grid" id="grid-open" role="list"></div>
+    </section>
+
+    <!-- All Films (filterable) -->
+    <section class="catalog-row catalog-main" aria-labelledby="row-all">
+      <h2 class="row-title" id="row-all">All Films</h2>
+      <div class="film-grid" id="grid-all" role="list"></div>
+      <p class="empty-state" id="empty-state" hidden>No films found for this filter.</p>
+    </section>
+
+  </main>
+
+  <!-- =================== FILM DETAIL MODAL =================== -->
+  <dialog class="film-modal" id="film-modal" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-inner">
+      <button class="modal-close" aria-label="Close film details">✕</button>
+
+      <div class="modal-player-wrap">
+        <div id="modal-player" class="plyr-container"></div>
+      </div>
+
+      <div class="modal-body">
+        <article itemscope itemtype="https://schema.org/Movie">
+          <div class="modal-meta">
+            <span class="badge badge-category" id="modal-category" itemprop="genre"></span>
+            <span class="modal-year" id="modal-year" itemprop="datePublished"></span>
+            <span class="modal-duration" id="modal-duration" itemprop="duration"></span>
+            <span class="ai-badge" id="modal-ai-badge" aria-label="AI Generated" hidden>AI</span>
+          </div>
+          <h2 class="modal-title" id="modal-title" itemprop="name"></h2>
+          <p class="modal-description" id="modal-description" itemprop="description"></p>
+          <div class="modal-source">
+            <span>Source: </span>
+            <strong id="modal-channel" itemprop="productionCompany"></strong>
+          </div>
+          <div class="modal-tags" id="modal-tags" aria-label="Tags"></div>
+          <meta id="modal-url" itemprop="url" content="" />
+        </article>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- =================== CONTINUE WATCHING =================== -->
+  <section class="catalog-row" id="continue-watching-section" aria-labelledby="row-continue" hidden>
+    <h2 class="row-title" id="row-continue">Continue Watching</h2>
+    <div class="film-grid" id="grid-continue" role="list"></div>
+  </section>
+
+  <!-- =================== FOOTER =================== -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="footer-inner">
+      <div class="footer-logo">
+        <span class="logo-icon" aria-hidden="true">▣</span>
+        <span class="logo-text">Frame</span>
+      </div>
+      <p class="footer-tagline">Independent. Open. AI-forward.</p>
+      <nav class="footer-nav" aria-label="Footer navigation">
+        <ul role="list">
+          <li><a href="#">About</a></li>
+          <li><a href="#">Sources</a></li>
+          <li><a href="#">Credits</a></li>
+        </ul>
+      </nav>
+      <p class="footer-credits">
+        Films sourced from <a href="https://www.youtube.com/@dust" target="_blank" rel="noopener noreferrer">Dust</a>,
+        <a href="https://www.youtube.com/@omeleto" target="_blank" rel="noopener noreferrer">Omeleto</a>,
+        <a href="https://studio.blender.org" target="_blank" rel="noopener noreferrer">Blender Studio</a> and
+        <a href="https://runwayml.com" target="_blank" rel="noopener noreferrer">Runway</a>.
+        All rights belong to their respective creators.
+      </p>
+      <p class="footer-copy">
+        <small>© <span id="year"></span> Frame. Built with open web standards.</small>
+      </p>
+    </div>
+  </footer>
+
+  <!-- =================== SKIP LINK =================== -->
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <!-- Plyr JS -->
+  <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
+
+  <!-- App JS -->
+  <script src="js/app.js"></script>
+</body>
+</html>
