@@ -140,6 +140,7 @@ function injectStructuredData() {
         'name': film.title,
         'description': film.description,
         'thumbnailUrl': film.thumbnail,
+        'image': film.thumbnail,
         'uploadDate': `${film.year}-01-01`,
         'duration': film.duration,
         'embedUrl': embedUrl,
@@ -288,13 +289,13 @@ function cardHTML(film) {
       role="listitem"
       tabindex="0"
       aria-label="${escHtml(film.title)}, ${escHtml(film.channel)}, ${film.year}"
-      itemscope itemtype="https://schema.org/Movie"
+      itemscope itemtype="https://schema.org/VideoObject"
     >
       <meta itemprop="name" content="${escHtml(film.title)}" />
-      <meta itemprop="datePublished" content="${film.year}" />
-      <meta itemprop="duration" content="${escHtml(film.duration)}" />
       <meta itemprop="description" content="${escHtml(film.description)}" />
       <meta itemprop="thumbnailUrl" content="${escHtml(film.thumbnail)}" />
+      <meta itemprop="uploadDate" content="${film.year}-01-01" />
+      <meta itemprop="duration" content="${escHtml(film.duration)}" />
       ${film.source === 'youtube' ? `<meta itemprop="embedUrl" content="https://www.youtube-nocookie.com/embed/${escHtml(film.videoId)}" />` : ''}
 
       <div class="film-thumb">
@@ -367,6 +368,9 @@ function openModal(film) {
   Dom.modalTags.innerHTML = film.tags.map((t) =>
     `<span class="tag-chip">${escHtml(t)}</span>`
   ).join('');
+
+  const modalImage = document.getElementById('modal-image');
+  if (modalImage) modalImage.setAttribute('content', film.thumbnail);
 
   if (film.source === 'vimeo') {
     Dom.modalUrl.setAttribute('content', `https://vimeo.com/${film.videoId}`);
