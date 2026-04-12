@@ -543,6 +543,12 @@ function closeModal() {
    EVENT BINDING
    ============================================ */
 function bindEvents() {
+  // Header scroll state
+  const header = document.querySelector('.site-header');
+  const onScroll = () => header.classList.toggle('is-scrolled', window.scrollY > 40);
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
   // Modal close
   Dom.modalClose.addEventListener('click', closeModal);
   Dom.modal.addEventListener('click', (e) => {

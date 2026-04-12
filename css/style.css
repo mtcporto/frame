@@ -110,11 +110,17 @@ button {
   top: 0; left: 0; right: 0;
   z-index: 100;
   height: auto;
-  background: linear-gradient(180deg, rgba(10,10,15,0.98) 80%, transparent);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: linear-gradient(180deg, rgba(10,10,15,0.15) 0%, transparent 100%);
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+  border-bottom: 1px solid transparent;
+  transition: background var(--transition-normal), backdrop-filter var(--transition-normal), border-color var(--transition-normal);
+}
+.site-header.is-scrolled {
+  background: linear-gradient(180deg, rgba(10,10,15,0.97) 80%, transparent);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--border);
-  transition: background var(--transition-normal);
 }
 
 .header-inner {
