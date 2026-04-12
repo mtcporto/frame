@@ -264,8 +264,9 @@ function renderGrid(container, films) {
   }
   container.innerHTML = films.map((f) => cardHTML(f)).join('');
 
-  // attach click handlers
-  container.querySelectorAll('.film-card').forEach((card) => {
+  // attach click handlers + stagger entry animation
+  container.querySelectorAll('.film-card').forEach((card, i) => {
+    card.style.animationDelay = `${Math.min(i * 40, 480)}ms`;
     const id = card.dataset.id;
     const film = state.catalog.find((f) => f.id === id);
     if (!film) return;
@@ -280,6 +281,12 @@ function cardHTML(film) {
   const progress = state.progressMap[film.id];
   const durationSecs = parseDuration(film.duration);
   const pct = durationSecs && progress ? Math.min(100, Math.round((progress / durationSecs) * 100)) : 0;
+
+  const identityLabel = film.channel === 'Runway AI Film Festival'
+    ? `<span class="thumb-label thumb-label-award" aria-label="Award Winner">★ Award</span>`
+    : film.category.includes('open')
+      ? `<span class="thumb-label thumb-label-open" aria-label="Open Film">Open Film</span>`
+      : '';
 
   return `
     <article
@@ -314,6 +321,7 @@ function cardHTML(film) {
         </div>
         <span class="thumb-duration" aria-label="Duration: ${escHtml(film.durationLabel)}">${escHtml(film.durationLabel)}</span>
         ${film.aiGenerated ? `<span class="thumb-ai-label ai-badge" aria-label="AI Generated">AI</span>` : ''}
+        ${identityLabel}
         ${pct > 0 ? `
           <div class="thumb-progress" aria-label="${pct}% watched">
             <div class="thumb-progress-fill" style="width:${pct}%"></div>
@@ -374,6 +382,14 @@ function openModal(film) {
   // build player container
   Dom.modalPlayer.innerHTML = '';
 
+  // show thumbnail poster while video loads
+  const posterEl = document.createElement('div');
+  posterEl.className = 'modal-poster';
+  posterEl.style.backgroundImage = `url('${film.thumbnail}')`;
+  posterEl.setAttribute('aria-hidden', 'true');
+  posterEl.innerHTML = `<div class="modal-poster-spinner-wrap"><div class="modal-poster-spinner"></div><span>Loading video…</span></div>`;
+  Dom.modalPlayer.parentElement.appendChild(posterEl);
+
   let playerEl;
   if (film.source === 'youtube') {
     playerEl = document.createElement('div');
@@ -418,11 +434,20 @@ function openModal(film) {
     }
   });
 
+  // fade out loading poster when video starts playing
+  player.once('playing', () => {
+    posterEl.style.opacity = '0';
+    setTimeout(() => posterEl.remove(), 320);
+  });
+
   Dom.modal.showModal();
   Dom.modal.focus();
 }
 
 function destroyPlayer() {
+  // Remove loading poster if still visible
+  const existingPoster = Dom.modalPlayer.parentElement?.querySelector('.modal-poster');
+  if (existingPoster) existingPoster.remove();
   if (state.currentPlayer) {
     try { state.currentPlayer.destroy(); } catch { /* ignore */ }
     state.currentPlayer = null;

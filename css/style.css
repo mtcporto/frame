@@ -879,6 +879,96 @@ dialog.film-modal::backdrop {
   .film-grid { grid-template-columns: repeat(2, 1fr); gap: 0.625rem; }
 }
 
+/* ============================================
+   HERO ENTRY ANIMATION
+   ============================================ */
+@keyframes hero-in {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: none; }
+}
+.hero-content {
+  animation: hero-in 0.55s cubic-bezier(0.4, 0, 0.2, 1) 0.05s both;
+}
+
+/* ============================================
+   CARD ENTRY ANIMATION
+   ============================================ */
+@keyframes card-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+.film-card {
+  animation: card-in 0.32s ease-out both;
+}
+
+/* ============================================
+   IDENTITY LABELS (on thumbnail)
+   ============================================ */
+.thumb-label {
+  position: absolute;
+  bottom: 0.4rem;
+  left: 0.5rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: 3px;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+.thumb-label-award {
+  background: rgba(255, 191, 0, 0.18);
+  color: #ffd700;
+  border: 1px solid rgba(255, 215, 0, 0.3);
+}
+.thumb-label-open {
+  background: rgba(8, 145, 178, 0.18);
+  color: #22d3ee;
+  border: 1px solid rgba(8, 145, 178, 0.3);
+}
+
+/* ============================================
+   MODAL LOADING POSTER
+   ============================================ */
+.modal-poster {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.32s ease;
+}
+.modal-poster::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+}
+.modal-poster-spinner-wrap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.625rem;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.8125rem;
+  letter-spacing: 0.04em;
+}
+.modal-poster-spinner {
+  width: 28px;
+  height: 28px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-top-color: rgba(255, 255, 255, 0.85);
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
