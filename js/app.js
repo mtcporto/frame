@@ -73,7 +73,6 @@ const Dom = {
   modalChannel: $('#modal-channel'),
   modalTags: $('#modal-tags'),
   modalAiBadge: $('#modal-ai-badge'),
-  modalUrl: $('#modal-url'),
   modalClose: $('.modal-close'),
 
   btnSearch: $('.btn-search'),
@@ -368,15 +367,6 @@ function openModal(film) {
   Dom.modalTags.innerHTML = film.tags.map((t) =>
     `<span class="tag-chip">${escHtml(t)}</span>`
   ).join('');
-
-  const modalImage = document.getElementById('modal-image');
-  if (modalImage) modalImage.setAttribute('content', film.thumbnail);
-
-  if (film.source === 'vimeo') {
-    Dom.modalUrl.setAttribute('content', `https://vimeo.com/${film.videoId}`);
-  } else {
-    Dom.modalUrl.setAttribute('content', `https://www.youtube.com/watch?v=${film.videoId}`);
-  }
 
   // destroy previous player
   destroyPlayer();
