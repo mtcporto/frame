@@ -630,7 +630,7 @@ function closeSearch() {
    ============================================ */
 function navigateToFilm(id) {
   sessionStorage.setItem('frame_scroll', window.scrollY);
-  const href = `film/${id}`;
+  const href = `film/?id=${encodeURIComponent(id)}`;
   if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     document.body.classList.add('page-leaving');
     setTimeout(() => { window.location.href = href; }, 280);
@@ -670,3 +670,14 @@ function escHtml(str) {
    START
    ============================================ */
 document.addEventListener('DOMContentLoaded', init);
+
+// bfcache restore: remove page-leaving lock and reset stale modal
+window.addEventListener('pageshow', (e) => {
+  if (e.persisted) {
+    document.body.classList.remove('page-leaving');
+    // close modal — Plyr instance is stale after bfcache restore
+    destroyPlayer();
+    if (Dom.modal.open) Dom.modal.close();
+    Dom.modalPlayer.innerHTML = '';
+  }
+});

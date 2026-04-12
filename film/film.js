@@ -29,10 +29,10 @@ function setMeta(id, attr, value) {
 async function init() {
   document.getElementById('year').textContent = new Date().getFullYear();
 
-  // Read film ID from clean URL path (/film/slug) with ?id= fallback
-  const filmId = window.location.pathname.replace(/\/$/, '').split('/').pop()
-              || new URLSearchParams(window.location.search).get('id');
-  if (!filmId) { window.location.replace('../'); return; }
+  // Read film ID from ?id= param (navigation) or clean path (Vercel/server rewrite)
+  const filmId = new URLSearchParams(window.location.search).get('id')
+              || window.location.pathname.replace(/\/$/, '').split('/').pop();
+  if (!filmId || filmId === 'index.html') { window.location.replace('../'); return; }
 
   let catalog;
   try {
@@ -67,14 +67,19 @@ function render(film, catalog) {
   setMeta('tw-description',   'content', film.description);
   setMeta('tw-image',         'content', film.thumbnail);
 
-  // Canonical URL
+  // Canonical URL + rewrite browser URL to clean form
+  const cleanPath = `${window.location.origin}${window.location.pathname.replace(/\/[^/]*$/, '')}/${film.id}`;
   let canonical = document.querySelector('link[rel="canonical"]');
   if (!canonical) {
     canonical = document.createElement('link');
     canonical.rel = 'canonical';
     document.head.appendChild(canonical);
   }
-  canonical.href = `${window.location.origin}${window.location.pathname}`;
+  canonical.href = cleanPath;
+  // Update URL bar to clean slug without reloading (no server rewrite needed locally)
+  if (window.location.search.includes('id=')) {
+    history.replaceState(null, '', cleanPath);
+  }
 
   // VideoObject JSON-LD
   const embedUrl = film.source === 'youtube'
@@ -194,7 +199,7 @@ function renderRelated(film, catalog) {
   grid.innerHTML = related.map((f) => `
     <a
       class="film-card"
-      href="${f.id}"
+      href="?id=${encodeURIComponent(f.id)}"
       role="listitem"
       aria-label="${escHtml(f.title)}, ${escHtml(f.channel)}, ${f.year}"
     >
@@ -260,3 +265,10 @@ function showError(msg) {
    START
    ============================================ */
 document.addEventListener('DOMContentLoaded', init);
+
+// bfcache restore: remove page-leaving pointer-events lock
+window.addEventListener('pageshow', (e) => {
+  if (e.persisted) {
+    document.body.classList.remove('page-leaving');
+  }
+});
