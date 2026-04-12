@@ -157,7 +157,7 @@ function injectStructuredData() {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
     'name': 'Frame Curated Catalog',
-    'url': 'https://frame.film',
+    'url': 'https://frame-navy-eta.vercel.app/',
     'numberOfItems': state.catalog.length,
     'itemListElement': items,
   };
