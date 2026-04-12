@@ -191,22 +191,6 @@ button {
 }
 .btn-search:hover { color: var(--text-primary); background: var(--bg-hover); }
 
-.btn-toggle-ai {
-  padding: 0.25rem 0.75rem;
-  border-radius: 20px;
-  border: 1px solid var(--ai-color);
-  color: var(--ai-color);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  transition: background var(--transition-fast), color var(--transition-fast);
-}
-.btn-toggle-ai[aria-pressed="true"] {
-  background: var(--ai-color);
-  color: #fff;
-}
-.btn-toggle-ai:hover { background: var(--ai-soft); }
-
 /* Search bar */
 .search-bar {
   display: flex;

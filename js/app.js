@@ -12,7 +12,6 @@ const state = {
   catalog: [],
   categories: [],
   currentFilter: 'all',
-  aiOnly: false,
   searchQuery: '',
   progressMap: {},          // { filmId: secondsWatched }
   currentPlayer: null,
@@ -24,6 +23,7 @@ const state = {
    ============================================ */
 const Storage = {
   KEY_PROGRESS: 'frame_progress',
+  KEY_SESSION:  'frame_session',
 
   loadProgress() {
     try {
@@ -33,6 +33,16 @@ const Storage = {
 
   saveProgress(map) {
     try { localStorage.setItem(this.KEY_PROGRESS, JSON.stringify(map)); } catch { /* quota */ }
+  },
+
+  loadSession() {
+    try {
+      return JSON.parse(localStorage.getItem(this.KEY_SESSION) || '{}');
+    } catch { return {}; }
+  },
+
+  saveSession(obj) {
+    try { localStorage.setItem(this.KEY_SESSION, JSON.stringify(obj)); } catch { /* quota */ }
   },
 };
 
@@ -76,7 +86,6 @@ const Dom = {
   modalClose: $('.modal-close'),
 
   btnSearch: $('.btn-search'),
-  btnToggleAi: $('.btn-toggle-ai'),
   searchBar: $('.search-bar'),
   searchInput: $('#search-input'),
   btnSearchClose: $('.btn-search-close'),
@@ -93,6 +102,12 @@ const Dom = {
 async function init() {
   Dom.yearSpan.textContent = new Date().getFullYear();
   state.progressMap = Storage.loadProgress();
+
+  // restore last session
+  const session = Storage.loadSession();
+  if (session.filter && session.filter !== 'all') {
+    state.currentFilter = session.filter;
+  }
 
   renderSkeletons();
 
@@ -113,6 +128,16 @@ async function init() {
   renderContinueWatching();
   injectStructuredData();
   bindEvents();
+
+  // sync UI to restored session state
+  if (state.currentFilter !== 'all') {
+    Dom.navLinks.forEach((l) => l.classList.toggle('active', l.dataset.filter === state.currentFilter));
+    Dom.filterChips.forEach((c) => c.classList.toggle('active', c.dataset.filter === state.currentFilter));
+  }
+  if (session.lastFilmId) {
+    const lastFilm = state.catalog.find((f) => f.id === session.lastFilmId);
+    if (lastFilm) openModal(lastFilm);
+  }
 }
 
 /* ============================================
@@ -234,8 +259,6 @@ function renderAllGrids() {
 
 function renderFilteredGrid() {
   let films = state.catalog;
-
-  if (state.aiOnly) films = films.filter((f) => f.aiGenerated);
 
   if (state.currentFilter !== 'all') {
     films = films.filter((f) => f.category.includes(state.currentFilter));
@@ -362,6 +385,7 @@ function renderContinueWatching() {
    ============================================ */
 function openModal(film) {
   state.currentFilm = film;
+  Storage.saveSession({ filter: state.currentFilter, lastFilmId: film.id });
 
   // populate metadata
   Dom.modalTitle.textContent = film.title;
@@ -425,12 +449,17 @@ function openModal(film) {
     });
   }
 
-  // save progress on timeupdate
+  // save progress on timeupdate (throttled to 2s to avoid excessive writes)
+  let lastProgressSave = 0;
   player.on('timeupdate', () => {
     const t = Math.floor(player.currentTime || 0);
     if (t > 0) {
       state.progressMap[film.id] = t;
-      Storage.saveProgress(state.progressMap);
+      const now = Date.now();
+      if (now - lastProgressSave > 2000) {
+        Storage.saveProgress(state.progressMap);
+        lastProgressSave = now;
+      }
     }
   });
 
@@ -458,6 +487,8 @@ function closeModal() {
   destroyPlayer();
   Dom.modal.close();
   Dom.modalPlayer.innerHTML = '';
+  // flush any un-saved progress
+  Storage.saveProgress(state.progressMap);
   // refresh grids to update progress bars
   renderContinueWatching();
   renderFilteredGrid();
@@ -495,13 +526,6 @@ function bindEvents() {
     });
   });
 
-  // AI toggle
-  Dom.btnToggleAi.addEventListener('click', () => {
-    state.aiOnly = !state.aiOnly;
-    Dom.btnToggleAi.setAttribute('aria-pressed', String(state.aiOnly));
-    renderFilteredGrid();
-  });
-
   // Search toggle
   Dom.btnSearch.addEventListener('click', openSearch);
   Dom.btnSearchClose.addEventListener('click', closeSearch);
@@ -518,6 +542,7 @@ function bindEvents() {
 
 function setFilter(filter) {
   state.currentFilter = filter;
+  Storage.saveSession({ filter, lastFilmId: state.currentFilm?.id });
   renderFilteredGrid();
   // scroll to main grid
   const mainGrid = document.querySelector('.catalog-main');
