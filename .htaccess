@@ -1,0 +1,6 @@
+Options -MultiViews
+RewriteEngine On
+RewriteBase /frame/
+
+# Clean URLs: /film/slug → /film/index.html
+RewriteRule ^film/([^/]+)/?$ film/index.html [L]

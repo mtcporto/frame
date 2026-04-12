@@ -630,7 +630,7 @@ function closeSearch() {
    ============================================ */
 function navigateToFilm(id) {
   sessionStorage.setItem('frame_scroll', window.scrollY);
-  const href = `film/?id=${encodeURIComponent(id)}`;
+  const href = `film/${id}`;
   if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     document.body.classList.add('page-leaving');
     setTimeout(() => { window.location.href = href; }, 280);

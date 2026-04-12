@@ -29,7 +29,9 @@ function setMeta(id, attr, value) {
 async function init() {
   document.getElementById('year').textContent = new Date().getFullYear();
 
-  const filmId = new URLSearchParams(window.location.search).get('id');
+  // Read film ID from clean URL path (/film/slug) with ?id= fallback
+  const filmId = window.location.pathname.replace(/\/$/, '').split('/').pop()
+              || new URLSearchParams(window.location.search).get('id');
   if (!filmId) { window.location.replace('../'); return; }
 
   let catalog;
@@ -72,7 +74,7 @@ function render(film, catalog) {
     canonical.rel = 'canonical';
     document.head.appendChild(canonical);
   }
-  canonical.href = window.location.href.split('?')[0] + `?id=${film.id}`;
+  canonical.href = `${window.location.origin}${window.location.pathname}`;
 
   // VideoObject JSON-LD
   const embedUrl = film.source === 'youtube'
@@ -192,7 +194,7 @@ function renderRelated(film, catalog) {
   grid.innerHTML = related.map((f) => `
     <a
       class="film-card"
-      href="?id=${encodeURIComponent(f.id)}"
+      href="${f.id}"
       role="listitem"
       aria-label="${escHtml(f.title)}, ${escHtml(f.channel)}, ${f.year}"
     >
