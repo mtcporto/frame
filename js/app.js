@@ -135,6 +135,13 @@ async function init() {
     Dom.navLinks.forEach((l) => l.classList.toggle('active', l.dataset.filter === state.currentFilter));
     Dom.filterChips.forEach((c) => c.classList.toggle('active', c.dataset.filter === state.currentFilter));
   }
+
+  // restore scroll position when returning from film detail page
+  const savedScroll = sessionStorage.getItem('frame_scroll');
+  if (savedScroll) {
+    window.scrollTo({ top: parseInt(savedScroll, 10), behavior: 'instant' });
+    sessionStorage.removeItem('frame_scroll');
+  }
 }
 
 
@@ -234,7 +241,7 @@ function renderHero() {
   `;
 
   Dom.btnPlayHero.onclick = () => openModal(featured);
-  Dom.btnMoreInfo.onclick = () => { window.location.href = `film/?id=${featured.id}`; };
+  Dom.btnMoreInfo.onclick = () => navigateToFilm(featured.id);
 
   // inject muted autoplay video background after thumbnail
   if (featured.source === 'youtube' && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -443,7 +450,7 @@ function openModal(film) {
   Dom.modalTags.innerHTML = film.tags.map((t) =>
     `<span class="tag-chip">${escHtml(t)}</span>`
   ).join('');
-  Dom.modalViewDetails.href = `film/?id=${film.id}`;
+  Dom.modalViewDetails.onclick = (e) => { e.preventDefault(); navigateToFilm(film.id); };
 
   // destroy previous player
   destroyPlayer();
@@ -616,6 +623,20 @@ function closeSearch() {
   state.searchQuery = '';
   Dom.searchInput.value = '';
   renderFilteredGrid();
+}
+
+/* ============================================
+   NAVIGATION
+   ============================================ */
+function navigateToFilm(id) {
+  sessionStorage.setItem('frame_scroll', window.scrollY);
+  const href = `film/?id=${encodeURIComponent(id)}`;
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.body.classList.add('page-leaving');
+    setTimeout(() => { window.location.href = href; }, 280);
+  } else {
+    window.location.href = href;
+  }
 }
 
 /* ============================================

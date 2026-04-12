@@ -46,6 +46,7 @@ async function init() {
   if (!film) { window.location.replace('../'); return; }
 
   render(film, catalog);
+  bindTransitions();
 }
 
 /* ============================================
@@ -63,6 +64,15 @@ function render(film, catalog) {
   setMeta('tw-title',         'content', `${film.title} — Frame`);
   setMeta('tw-description',   'content', film.description);
   setMeta('tw-image',         'content', film.thumbnail);
+
+  // Canonical URL
+  let canonical = document.querySelector('link[rel="canonical"]');
+  if (!canonical) {
+    canonical = document.createElement('link');
+    canonical.rel = 'canonical';
+    document.head.appendChild(canonical);
+  }
+  canonical.href = window.location.href.split('?')[0] + `?id=${film.id}`;
 
   // VideoObject JSON-LD
   const embedUrl = film.source === 'youtube'
@@ -215,6 +225,25 @@ function renderRelated(film, catalog) {
   `).join('');
 
   section.hidden = false;
+}
+
+/* ============================================
+   PAGE TRANSITIONS
+   ============================================ */
+function bindTransitions() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest('a[href]');
+    if (!link) return;
+    const href = link.getAttribute('href');
+    // only intercept same-origin internal links, not anchors
+    if (!href || href.startsWith('#') || href.startsWith('http') || link.target === '_blank') return;
+
+    e.preventDefault();
+    document.body.classList.add('page-leaving');
+    setTimeout(() => { window.location.href = href; }, 280);
+  });
 }
 
 /* ============================================
