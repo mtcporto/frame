@@ -83,6 +83,7 @@ const Dom = {
   modalChannel: $('#modal-channel'),
   modalTags: $('#modal-tags'),
   modalAiBadge: $('#modal-ai-badge'),
+  modalViewDetails: $('#modal-view-details'),
   modalClose: $('.modal-close'),
 
   btnSearch: $('.btn-search'),
@@ -233,7 +234,7 @@ function renderHero() {
   `;
 
   Dom.btnPlayHero.onclick = () => openModal(featured);
-  Dom.btnMoreInfo.onclick = () => openModal(featured);
+  Dom.btnMoreInfo.onclick = () => { window.location.href = `film/?id=${featured.id}`; };
 
   // inject muted autoplay video background after thumbnail
   if (featured.source === 'youtube' && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -442,6 +443,7 @@ function openModal(film) {
   Dom.modalTags.innerHTML = film.tags.map((t) =>
     `<span class="tag-chip">${escHtml(t)}</span>`
   ).join('');
+  Dom.modalViewDetails.href = `film/?id=${film.id}`;
 
   // destroy previous player
   destroyPlayer();

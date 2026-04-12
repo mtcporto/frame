@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta id="meta-description" name="description" content="Film details — Frame" />
+
+  <!-- Open Graph (updated by film.js) -->
+  <meta property="og:type" content="video.movie" />
+  <meta property="og:site_name" content="Frame" />
+  <meta property="og:locale" content="en_US" />
+  <meta id="og-url" property="og:url" content="" />
+  <meta id="og-title" property="og:title" content="Frame — Curated Cinema" />
+  <meta id="og-description" property="og:description" content="" />
+  <meta id="og-image" property="og:image" content="" />
+  <meta id="og-image-alt" property="og:image:alt" content="" />
+  <meta property="og:image:width" content="1280" />
+  <meta property="og:image:height" content="720" />
+
+  <!-- Twitter / X Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta id="tw-title" name="twitter:title" content="Frame — Curated Cinema" />
+  <meta id="tw-description" name="twitter:description" content="" />
+  <meta id="tw-image" name="twitter:image" content="" />
+
+  <!-- VideoObject structured data (populated by film.js) -->
+  <script type="application/ld+json" id="ld-film">{}</script>
+
+  <title>Frame — Film</title>
+
+  <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎬</text></svg>" />
+</head>
+<body>
+
+  <!-- ===================== HEADER ===================== -->
+  <header class="site-header is-scrolled" role="banner">
+    <div class="header-inner">
+      <a href="../" class="logo" aria-label="Frame — Go to homepage">
+        <span class="logo-icon" aria-hidden="true">▣</span>
+        <span class="logo-text">Frame</span>
+      </a>
+
+      <nav class="main-nav" aria-label="Primary navigation">
+        <ul role="list">
+          <li><a href="../" class="nav-link">All Films</a></li>
+          <li><a href="../" class="nav-link">AI Cinema</a></li>
+          <li><a href="../" class="nav-link">Animation</a></li>
+          <li><a href="../" class="nav-link">Open Source</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <a href="../" class="btn-back-catalog" aria-label="Back to catalog">
+          <svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15,18 9,12 15,6"/></svg>
+          Catalog
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- =================== FILM DETAIL HERO =================== -->
+  <section class="fd-hero" id="fd-hero" aria-labelledby="fd-title">
+    <div class="fd-bg" id="fd-bg" aria-hidden="true"></div>
+    <div class="fd-gradient" aria-hidden="true"></div>
+
+    <div class="fd-inner">
+
+      <!-- Player -->
+      <div class="fd-player-wrap">
+        <div id="fd-player" class="plyr-container"></div>
+        <div class="modal-poster" id="fd-poster" aria-hidden="true">
+          <div class="modal-poster-spinner-wrap">
+            <div class="modal-poster-spinner"></div>
+            <span>Loading video…</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Details -->
+      <div class="fd-details">
+        <div class="fd-meta">
+          <span class="badge badge-category" id="fd-category"></span>
+          <span class="modal-year" id="fd-year"></span>
+          <span class="modal-duration" id="fd-duration"></span>
+          <span class="ai-badge" id="fd-ai-badge" aria-label="AI Generated" hidden>AI</span>
+        </div>
+        <h1 class="fd-title" id="fd-title">Loading…</h1>
+        <p class="fd-description" id="fd-description"></p>
+        <div class="fd-source modal-source">
+          <span>Source: </span><strong id="fd-channel"></strong>
+        </div>
+        <div class="fd-tags modal-tags" id="fd-tags" aria-label="Tags"></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =================== RELATED FILMS =================== -->
+  <main id="main-content" tabindex="-1">
+    <section class="catalog-row" id="related-section" hidden>
+      <h2 class="row-title">You might also enjoy</h2>
+      <div class="film-grid" id="grid-related" role="list"></div>
+    </section>
+  </main>
+
+  <!-- =================== FOOTER =================== -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="footer-inner">
+      <div class="footer-logo">
+        <span class="logo-icon" aria-hidden="true">▣</span>
+        <span class="logo-text">Frame</span>
+      </div>
+      <p class="footer-tagline">Independent. Open. AI-forward.</p>
+      <p class="footer-credits">
+        Films sourced from <a href="https://www.youtube.com/@dust" target="_blank" rel="noopener noreferrer">Dust</a>,
+        <a href="https://www.youtube.com/@omeleto" target="_blank" rel="noopener noreferrer">Omeleto</a>,
+        <a href="https://studio.blender.org" target="_blank" rel="noopener noreferrer">Blender Studio</a> and
+        <a href="https://runwayml.com" target="_blank" rel="noopener noreferrer">Runway</a>.
+        All rights belong to their respective creators.
+      </p>
+      <p class="footer-copy">
+        <small>© <span id="year"></span> Frame. Built with open web standards.</small>
+      </p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
+  <script src="film.js"></script>
+</body>
+</html>
