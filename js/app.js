@@ -169,7 +169,7 @@ function injectStructuredData() {
       'position': i + 1,
       'item': {
         '@type': 'VideoObject',
-        '@id': watchUrl,
+        '@id': `https://frame-navy-eta.vercel.app/film/${film.id}`,
         'name': film.title,
         'description': film.description,
         'thumbnailUrl': film.thumbnail,
@@ -545,6 +545,9 @@ function openModal(film) {
   // Track view count for Top 10 personalisation
   state.viewsMap[film.id] = (state.viewsMap[film.id] || 0) + 1;
   Storage.saveViews(state.viewsMap);
+
+  // give the dialog an accessible name from the film title
+  Dom.modal.setAttribute('aria-label', film.title);
 
   // populate metadata
   Dom.modalTitle.textContent = film.title;
