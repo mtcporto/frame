@@ -1217,6 +1217,33 @@ dialog.film-modal::backdrop {
   margin-bottom: 1rem;
 }
 
+.fd-actions {
+  margin-top: 1.25rem;
+}
+
+.btn-share {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.55rem 1.1rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: var(--bg-hover);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
+}
+.btn-share:hover {
+  color: var(--text-primary);
+  background: rgba(255,255,255,0.1);
+}
+.btn-share.is-copied {
+  color: #4ade80;
+  border-color: rgba(74,222,128,0.35);
+}
+
 /* Back to catalog button */
 .btn-back-catalog {
   display: inline-flex;

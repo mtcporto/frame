@@ -162,6 +162,22 @@ function render(film, catalog) {
     .map((t) => `<span class="tag-chip">${escHtml(t)}</span>`)
     .join('');
 
+  // Share button — copy canonical URL to clipboard
+  const shareBtn = document.getElementById('fd-share-btn');
+  const shareBtnOrig = shareBtn.innerHTML;
+  shareBtn.addEventListener('click', () => {
+    navigator.clipboard.writeText(cleanPath).then(() => {
+      shareBtn.textContent = '✓ Copied!';
+      shareBtn.classList.add('is-copied');
+      setTimeout(() => {
+        shareBtn.innerHTML = shareBtnOrig;
+        shareBtn.classList.remove('is-copied');
+      }, 1800);
+    }).catch(() => {
+      prompt('Copy this link:', cleanPath);
+    });
+  });
+
   renderPlayer(film, poster);
   renderRelated(film, catalog);
 }
