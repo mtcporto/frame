@@ -58,6 +58,12 @@
 
   <title>Frame — Curated Cinema</title>
 
+  <!-- Preconnect to external CDNs -->
+  <link rel="preconnect" href="https://cdn.plyr.io" />
+  <link rel="preconnect" href="https://www.youtube-nocookie.com" />
+  <link rel="preconnect" href="https://i.ytimg.com" />
+  <link rel="dns-prefetch" href="https://player.vimeo.com" />
+
   <!-- Plyr CSS -->
   <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
 
@@ -130,7 +136,7 @@
   <main id="main-content" tabindex="-1">
 
     <!-- Filter bar (mobile) -->
-    <div class="filter-bar" role="navigation" aria-label="Film categories">
+    <div class="filter-bar" role="group" aria-label="Filter by category">
       <div class="filter-scroll">
         <button class="filter-chip active" data-filter="all">All</button>
         <button class="filter-chip" data-filter="ai">AI Cinema</button>

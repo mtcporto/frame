@@ -342,7 +342,6 @@ function renderGrid(container, films) {
       if (film.source !== 'youtube') return;
       const link = document.createElement('link');
       link.rel = 'prefetch';
-      link.as = 'document';
       link.href = `https://www.youtube-nocookie.com/embed/${film.videoId}?rel=0`;
       document.head.appendChild(link);
     };
@@ -488,7 +487,7 @@ function openModal(film) {
 
   state.currentPlayer = new Plyr(playerEl, {
     controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen'],
-    youtube: { noCookie: true, rel: 0, showinfo: 0, iv_load_policy: 3 },
+    youtube: { noCookie: true, rel: 0, iv_load_policy: 3 },
     ratio: '16:9',
   });
 

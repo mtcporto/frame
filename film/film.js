@@ -55,6 +55,9 @@ async function init() {
    RENDER
    ============================================ */
 function render(film, catalog) {
+  // Canonical URL — computed first, used for og:url, @id, replaceState
+  const cleanPath = `${window.location.origin}${window.location.pathname.replace(/\/[^/]*$/, '')}/${film.id}`;
+
   // Page title & meta tags
   document.title = `${film.title} — Frame`;
   setMeta('meta-description', 'content', film.description);
@@ -62,13 +65,11 @@ function render(film, catalog) {
   setMeta('og-description',   'content', film.description);
   setMeta('og-image',         'content', film.thumbnail);
   setMeta('og-image-alt',     'content', `${film.title} — Frame`);
-  setMeta('og-url',           'content', window.location.href);
+  setMeta('og-url',           'content', cleanPath);
   setMeta('tw-title',         'content', `${film.title} — Frame`);
   setMeta('tw-description',   'content', film.description);
   setMeta('tw-image',         'content', film.thumbnail);
-
-  // Canonical URL + rewrite browser URL to clean form
-  const cleanPath = `${window.location.origin}${window.location.pathname.replace(/\/[^/]*$/, '')}/${film.id}`;
+  setMeta('tw-image-alt',     'content', `${film.title} — Frame`);
   let canonical = document.querySelector('link[rel="canonical"]');
   if (!canonical) {
     canonical = document.createElement('link');
@@ -94,6 +95,7 @@ function render(film, catalog) {
     ldScript.textContent = JSON.stringify({
       '@context': 'https://schema.org',
       '@type': 'VideoObject',
+      '@id': cleanPath,
       'name': film.title,
       'description': film.description,
       'thumbnailUrl': film.thumbnail,
@@ -106,6 +108,23 @@ function render(film, catalog) {
       'productionCompany': { '@type': 'Organization', 'name': film.channel },
     });
   }
+
+  // BreadcrumbList JSON-LD
+  let breadcrumbScript = document.getElementById('ld-breadcrumb');
+  if (!breadcrumbScript) {
+    breadcrumbScript = document.createElement('script');
+    breadcrumbScript.type = 'application/ld+json';
+    breadcrumbScript.id = 'ld-breadcrumb';
+    document.head.appendChild(breadcrumbScript);
+  }
+  breadcrumbScript.textContent = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    'itemListElement': [
+      { '@type': 'ListItem', 'position': 1, 'name': 'Frame', 'item': 'https://frame-navy-eta.vercel.app/' },
+      { '@type': 'ListItem', 'position': 2, 'name': film.title, 'item': cleanPath },
+    ],
+  });
 
   // Blurred hero background
   const bg = document.getElementById('fd-bg');
@@ -162,7 +181,7 @@ function renderPlayer(film, poster) {
 
   const player = new Plyr(playerEl, {
     controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen'],
-    youtube: { noCookie: true, rel: 0, showinfo: 0, iv_load_policy: 3 },
+    youtube: { noCookie: true, rel: 0, iv_load_policy: 3 },
     ratio: '16:9',
   });
 
