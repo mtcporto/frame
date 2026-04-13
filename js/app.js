@@ -10,6 +10,7 @@
    ============================================ */
 const state = {
   catalog: [],
+  top10: [],
   categories: [],
   currentFilter: 'all',
   searchQuery: '',
@@ -63,12 +64,11 @@ const Dom = {
   btnMoreInfo: $('#btn-more-info'),
 
   gridStaffPicks: $('#grid-staff-picks'),
+  gridTop10: $('#grid-top10'),
   gridRunway: $('#grid-runway'),
   gridDust: $('#grid-dust'),
   gridOmeleto: $('#grid-omeleto'),
   gridOpen: $('#grid-open'),
-  gridAll: $('#grid-all'),
-  emptyState: $('#empty-state'),
 
   continueSection: $('#continue-watching-section'),
   gridContinue: $('#grid-continue'),
@@ -92,7 +92,6 @@ const Dom = {
   btnSearchClose: $('.btn-search-close'),
 
   navLinks: $$('.nav-link'),
-  filterChips: $$('.filter-chip'),
 
   yearSpan: $('#year'),
 };
@@ -104,12 +103,6 @@ async function init() {
   Dom.yearSpan.textContent = new Date().getFullYear();
   state.progressMap = Storage.loadProgress();
 
-  // restore last session
-  const session = Storage.loadSession();
-  if (session.filter && session.filter !== 'all') {
-    state.currentFilter = session.filter;
-  }
-
   renderSkeletons();
 
   try {
@@ -117,24 +110,19 @@ async function init() {
     if (!res.ok) throw new Error('catalog fetch failed');
     const data = await res.json();
     state.catalog = data.catalog || [];
+    state.top10   = data.top10   || [];
     state.categories = data.categories || [];
   } catch (err) {
     console.error('[Frame] Failed to load catalog:', err);
-    Dom.gridAll.innerHTML = `<p class="empty-state">Could not load the catalog. Please try again later.</p>`;
     return;
   }
 
   renderHero();
   renderAllGrids();
+  renderTop10();
   renderContinueWatching();
   injectStructuredData();
   bindEvents();
-
-  // sync UI to restored session state
-  if (state.currentFilter !== 'all') {
-    Dom.navLinks.forEach((l) => l.classList.toggle('active', l.dataset.filter === state.currentFilter));
-    Dom.filterChips.forEach((c) => c.classList.toggle('active', c.dataset.filter === state.currentFilter));
-  }
 
   // restore scroll position when returning from film detail page
   const savedScroll = sessionStorage.getItem('frame_scroll');
@@ -285,29 +273,56 @@ function renderAllGrids() {
   renderGrid(Dom.gridDust, dustFilms);
   renderGrid(Dom.gridOmeleto, omeletoFilms);
   renderGrid(Dom.gridOpen, openFilms);
-  renderFilteredGrid();
 }
 
-function renderFilteredGrid() {
-  let films = state.catalog;
+/* ============================================
+   TOP 10
+   ============================================ */
+function renderTop10() {
+  const container = Dom.gridTop10;
+  if (!container) return;
 
-  if (state.currentFilter !== 'all') {
-    films = films.filter((f) => f.category.includes(state.currentFilter));
-  }
+  const films = state.top10
+    .map((id) => state.catalog.find((f) => f.id === id))
+    .filter(Boolean);
 
-  if (state.searchQuery) {
-    const q = state.searchQuery.toLowerCase();
-    films = films.filter(
-      (f) =>
-        f.title.toLowerCase().includes(q) ||
-        f.description.toLowerCase().includes(q) ||
-        f.channel.toLowerCase().includes(q) ||
-        f.tags.some((t) => t.toLowerCase().includes(q))
-    );
-  }
+  if (!films.length) return;
 
-  Dom.emptyState.hidden = films.length > 0;
-  renderGrid(Dom.gridAll, films);
+  container.innerHTML = films.map((film, i) => `
+    <div
+      class="top10-item"
+      role="listitem"
+      tabindex="0"
+      data-id="${escHtml(film.id)}"
+      aria-label="#${i + 1} — ${escHtml(film.title)}, ${escHtml(film.channel)}"
+    >
+      <span class="top10-num" aria-hidden="true">${i + 1}</span>
+      <div class="top10-card">
+        <img
+          src="${escHtml(film.thumbnail)}"
+          alt="Thumbnail for ${escHtml(film.title)}"
+          loading="lazy"
+          decoding="async"
+          width="130" height="185"
+          onerror="this.onerror=null;this.src=this.src.replace('maxresdefault','hqdefault')"
+        />
+        <div class="top10-overlay" aria-hidden="true">
+          <div class="top10-play-btn">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  container.querySelectorAll('.top10-item').forEach((item) => {
+    const film = state.catalog.find((f) => f.id === item.dataset.id);
+    if (!film) return;
+    item.addEventListener('click', () => openModal(film));
+    item.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openModal(film); }
+    });
+  });
 }
 
 function renderGrid(container, films) {
@@ -544,7 +559,6 @@ function closeModal() {
   Storage.saveProgress(state.progressMap);
   // refresh grids to update progress bars
   renderContinueWatching();
-  renderFilteredGrid();
 }
 
 /* ============================================
@@ -564,26 +578,34 @@ function bindEvents() {
   });
   Dom.modal.addEventListener('cancel', closeModal); // Escape key
 
-  // Nav links
+  // Nav links — scroll to section
   Dom.navLinks.forEach((link) => {
     link.addEventListener('click', (e) => {
-      e.preventDefault();
-      const filter = link.dataset.filter;
-      setFilter(filter);
+      const section = link.dataset.section;
+      if (section === 'top') {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+      // href anchor links handle scrolling natively for the section links
       Dom.navLinks.forEach((l) => l.classList.toggle('active', l === link));
     });
   });
 
-  // Filter chips
-  Dom.filterChips.forEach((chip) => {
-    chip.addEventListener('click', () => {
-      const filter = chip.dataset.filter;
-      setFilter(filter);
-      Dom.filterChips.forEach((c) => c.classList.toggle('active', c === chip));
-      // sync nav
-      Dom.navLinks.forEach((l) => l.classList.toggle('active', l.dataset.filter === filter));
-    });
-  });
+  // Highlight active nav on scroll
+  const sectionMap = [
+    { section: 'open',    el: document.getElementById('row-open-section') },
+    { section: 'omeleto', el: document.getElementById('row-omeleto-section') },
+    { section: 'dust',    el: document.getElementById('row-dust-section') },
+    { section: 'runway',  el: document.getElementById('row-runway-section') },
+  ];
+  window.addEventListener('scroll', () => {
+    const mid = window.scrollY + window.innerHeight / 2;
+    let active = 'top';
+    for (const { section, el } of sectionMap) {
+      if (el && el.offsetTop <= mid) active = section;
+    }
+    Dom.navLinks.forEach((l) => l.classList.toggle('active', l.dataset.section === active));
+  }, { passive: true });
 
   // Search toggle
   Dom.btnSearch.addEventListener('click', openSearch);
@@ -591,23 +613,11 @@ function bindEvents() {
 
   Dom.searchInput.addEventListener('input', () => {
     state.searchQuery = Dom.searchInput.value.trim();
-    renderFilteredGrid();
   });
 
   Dom.searchInput.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closeSearch();
   });
-}
-
-function setFilter(filter) {
-  state.currentFilter = filter;
-  Storage.saveSession({ filter });
-  renderFilteredGrid();
-  // scroll to main grid
-  const mainGrid = document.querySelector('.catalog-main');
-  if (mainGrid) {
-    mainGrid.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
 }
 
 function openSearch() {
@@ -621,7 +631,6 @@ function closeSearch() {
   Dom.btnSearch.setAttribute('aria-expanded', 'false');
   state.searchQuery = '';
   Dom.searchInput.value = '';
-  renderFilteredGrid();
 }
 
 /* ============================================

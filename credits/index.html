@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Credits — the films, filmmakers, and open-source tools behind Frame." />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Frame" />
+  <meta property="og:title" content="Credits — Frame" />
+  <meta property="og:url" content="https://frame-navy-eta.vercel.app/credits/" />
+
+  <title>Credits — Frame</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎬</text></svg>" />
+
+  <style>
+    .static-page {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: calc(var(--header-h) + 64px) 24px 80px;
+    }
+    .static-page h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.5rem;
+    }
+    .static-page .lead {
+      font-size: 1.15rem;
+      color: var(--text-secondary);
+      margin-bottom: 3rem;
+      line-height: 1.7;
+    }
+    .static-page h2 {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 2.5rem 0 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .static-page p {
+      color: var(--text-secondary);
+      line-height: 1.8;
+      font-size: 0.9375rem;
+      margin-bottom: 0.75rem;
+    }
+    .credits-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+      margin-bottom: 1.5rem;
+    }
+    .credits-table th {
+      text-align: left;
+      padding: 8px 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+    }
+    .credits-table td {
+      padding: 10px 12px;
+      color: var(--text-secondary);
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      vertical-align: top;
+    }
+    .credits-table tr:last-child td { border-bottom: none; }
+    .credits-table a {
+      color: var(--accent);
+      transition: opacity var(--transition-fast);
+    }
+    .credits-table a:hover { opacity: 0.8; }
+    .credits-table .label {
+      font-weight: 600;
+      color: var(--text-primary);
+      white-space: nowrap;
+    }
+    .notice {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: var(--radius-md);
+      padding: 16px 20px;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-top: 2rem;
+    }
+    .notice strong { color: var(--text-primary); }
+  </style>
+</head>
+<body>
+
+  <header class="site-header is-scrolled" role="banner">
+    <div class="header-inner">
+      <a href="../" class="logo" aria-label="Frame — Go to homepage">
+        <span class="logo-icon" aria-hidden="true">▣</span>
+        <span class="logo-text">Frame</span>
+      </a>
+      <nav class="main-nav" aria-label="Primary navigation">
+        <ul role="list">
+          <li><a href="../" class="nav-link">Home</a></li>
+          <li><a href="../about/" class="nav-link">About</a></li>
+          <li><a href="../sources/" class="nav-link">Sources</a></li>
+          <li><a href="#" class="nav-link active">Credits</a></li>
+        </ul>
+      </nav>
+      <div class="header-actions"></div>
+    </div>
+  </header>
+
+  <main id="main-content" tabindex="-1">
+    <div class="static-page">
+
+      <h1>Credits</h1>
+      <p class="lead">
+        Frame is a curatorial project. Every film belongs to its creators. Every tool used to build this
+        platform is open source. Here is a full accounting of both.
+      </p>
+
+      <h2>Film rights &amp; sources</h2>
+      <p>
+        All films displayed on Frame are the intellectual property of their respective creators, studios,
+        and rights holders. Frame does not host video files — all playback is done via embedded YouTube
+        and Vimeo players directly from the originating channels.
+      </p>
+
+      <table class="credits-table" aria-label="Film sources and rights holders">
+        <thead>
+          <tr>
+            <th>Source</th>
+            <th>Rights holder</th>
+            <th>License</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="label">Runway AI Film Festival</td>
+            <td>Individual filmmakers (per film)</td>
+            <td>All rights reserved</td>
+          </tr>
+          <tr>
+            <td class="label">DUST</td>
+            <td>Gunpowder &amp; Sky / original filmmakers</td>
+            <td>All rights reserved</td>
+          </tr>
+          <tr>
+            <td class="label">Omeleto</td>
+            <td>Original filmmakers (licensed to Omeleto)</td>
+            <td>All rights reserved</td>
+          </tr>
+          <tr>
+            <td class="label">Blender Studio / Foundation</td>
+            <td>Blender Foundation</td>
+            <td><a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">Creative Commons Attribution 4.0</a></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>Open-source software used</h2>
+
+      <table class="credits-table" aria-label="Open-source software credits">
+        <thead>
+          <tr>
+            <th>Library / Tool</th>
+            <th>Purpose</th>
+            <th>License</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="label"><a href="https://plyr.io" target="_blank" rel="noopener noreferrer">Plyr 3.7.8</a></td>
+            <td>HTML5 &amp; embedded video player</td>
+            <td>MIT</td>
+          </tr>
+          <tr>
+            <td class="label"><a href="https://blender.org" target="_blank" rel="noopener noreferrer">Blender</a></td>
+            <td>Production tool for open films</td>
+            <td>GNU GPL 2.0+</td>
+          </tr>
+          <tr>
+            <td class="label"><a href="https://schema.org" target="_blank" rel="noopener noreferrer">Schema.org</a></td>
+            <td>Structured data vocabulary (JSON-LD)</td>
+            <td>Creative Commons</td>
+          </tr>
+          <tr>
+            <td class="label"><a href="https://vercel.com" target="_blank" rel="noopener noreferrer">Vercel</a></td>
+            <td>Hosting &amp; edge CDN</td>
+            <td>Commercial (free tier)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>Platform</h2>
+      <p>
+        Frame is built with plain HTML, CSS, and JavaScript — no frameworks, no bundlers, no dependencies
+        beyond Plyr. The catalog is a hand-authored JSON file. Structured data follows
+        Schema.org <code style="font-family:monospace;font-size:0.85em;color:var(--text-primary)">VideoObject</code>,
+        <code style="font-family:monospace;font-size:0.85em;color:var(--text-primary)">BreadcrumbList</code>,
+        and <code style="font-family:monospace;font-size:0.85em;color:var(--text-primary)">ItemList</code> vocabularies.
+      </p>
+      <p>
+        The source code for this project is not currently public, but is intended for eventual open release.
+      </p>
+
+      <div class="notice">
+        <strong>Rights notice:</strong> If you are a filmmaker or rights holder whose work appears here and you
+        would like it removed, or if you would like to update attribution, please contact us via the
+        Vercel project and we will act promptly.
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="site-footer" role="contentinfo">
+    <div class="footer-inner">
+      <div class="footer-logo">
+        <span class="logo-icon" aria-hidden="true">▣</span>
+        <span class="logo-text">Frame</span>
+      </div>
+      <p class="footer-tagline">Independent. Open. AI-forward.</p>
+      <nav class="footer-nav" aria-label="Footer navigation">
+        <ul role="list">
+          <li><a href="../about/">About</a></li>
+          <li><a href="../sources/">Sources</a></li>
+          <li><a href="#">Credits</a></li>
+        </ul>
+      </nav>
+      <p class="footer-credits">
+        Films sourced from <a href="https://www.youtube.com/@dust" target="_blank" rel="noopener noreferrer">Dust</a>,
+        <a href="https://www.youtube.com/@omeleto" target="_blank" rel="noopener noreferrer">Omeleto</a>,
+        <a href="https://studio.blender.org" target="_blank" rel="noopener noreferrer">Blender Studio</a> and
+        <a href="https://runwayml.com" target="_blank" rel="noopener noreferrer">Runway</a>.
+        All rights belong to their respective creators.
+      </p>
+      <p class="footer-copy">
+        <small>© <span id="year"></span> Frame. Built with open web standards.</small>
+      </p>
+    </div>
+  </footer>
+
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

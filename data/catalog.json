@@ -2246,6 +2246,18 @@
       "staffPick": false
     }
   ],
+  "top10": [
+    "aif-2025-total-pixel-space",
+    "dust-synapse",
+    "omeleto-geezers",
+    "sprite-fright",
+    "aif-2024-dawn-of-creation",
+    "dust-the-greatest-lie",
+    "omeleto-the-last-fry",
+    "cosmos-laundromat",
+    "aif-2025-rohki",
+    "dust-close-encounter"
+  ],
   "categories": [
     {
       "id": "all",

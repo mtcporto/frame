@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="About Frame — a curated cinema platform for independent, open-source, and AI-generated short films." />
+
+  <!-- Preconnect -->
+  <link rel="preconnect" href="https://i.ytimg.com" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Frame" />
+  <meta property="og:title" content="About — Frame" />
+  <meta property="og:description" content="A curated cinema platform for independent, open-source, and AI-generated films." />
+  <meta property="og:url" content="https://frame-navy-eta.vercel.app/about/" />
+
+  <title>About — Frame</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎬</text></svg>" />
+
+  <style>
+    .static-page {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: calc(var(--header-h) + 64px) 24px 80px;
+    }
+    .static-page h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.5rem;
+    }
+    .static-page .lead {
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+      margin-bottom: 3rem;
+      line-height: 1.7;
+    }
+    .static-page h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin: 2.5rem 0 0.75rem;
+      color: var(--text-primary);
+    }
+    .static-page p {
+      color: var(--text-secondary);
+      line-height: 1.8;
+      margin-bottom: 1rem;
+    }
+    .static-page .accent { color: var(--accent); }
+    .static-page .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 2.5rem 0;
+    }
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 1rem 0 1.5rem;
+    }
+    .pill {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 5px 14px;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===================== HEADER ===================== -->
+  <header class="site-header is-scrolled" role="banner">
+    <div class="header-inner">
+      <a href="../" class="logo" aria-label="Frame — Go to homepage">
+        <span class="logo-icon" aria-hidden="true">▣</span>
+        <span class="logo-text">Frame</span>
+      </a>
+      <nav class="main-nav" aria-label="Primary navigation">
+        <ul role="list">
+          <li><a href="../" class="nav-link">Home</a></li>
+          <li><a href="#" class="nav-link active">About</a></li>
+          <li><a href="../sources/" class="nav-link">Sources</a></li>
+          <li><a href="../credits/" class="nav-link">Credits</a></li>
+        </ul>
+      </nav>
+      <div class="header-actions"></div>
+    </div>
+  </header>
+
+  <main id="main-content" tabindex="-1">
+    <article class="static-page">
+
+      <h1>About <span class="accent">Frame</span></h1>
+      <p class="lead">
+        Frame is a curated cinema platform dedicated to independent, open-source, and AI-generated short films.
+        It exists to make boundary-pushing filmmaking accessible in one place.
+      </p>
+
+      <h2>The idea</h2>
+      <p>
+        Short films rarely get the attention they deserve. They live scattered across YouTube channels, Vimeo profiles,
+        and studio archives — buried under algorithmic noise. Frame collects the best of them, organises them by source
+        and theme, and presents them in a lean, distraction-free environment built for watching, not browsing.
+      </p>
+      <p>
+        The catalog spans studio animation by Blender artists, science-fiction shorts from DUST, character-driven
+        drama from Omeleto, and award-winning AI cinema from the Runway AI Film Festival. Every film is hand-picked.
+      </p>
+
+      <hr class="divider" />
+
+      <h2>What makes it different</h2>
+      <p>
+        Most platforms optimise for time-on-site. Frame optimises for a good film. There are no autoplay queues,
+        no forced recommendations mid-playback, and no ads. Progress saves automatically so you can pick up
+        where you left off across sessions.
+      </p>
+      <p>
+        The film detail page provides full metadata, related picks scored by channel and genre affinity,
+        and a clean player — no distractions, just the film.
+      </p>
+
+      <hr class="divider" />
+
+      <h2>Technology</h2>
+      <p>
+        Frame is a static web application — no server-side rendering, no database, no tracking.
+        The catalog lives in a single JSON file. The player is powered by
+        <a href="https://plyr.io" target="_blank" rel="noopener noreferrer" style="color:var(--accent)">Plyr</a>
+        over YouTube nocookie and Vimeo embeds.
+        It is deployed on <a href="https://vercel.com" target="_blank" rel="noopener noreferrer" style="color:var(--accent)">Vercel</a>
+        at the edge globally.
+      </p>
+
+      <div class="pill-row" aria-label="Technologies used">
+        <span class="pill">HTML / CSS / JS</span>
+        <span class="pill">Plyr 3.7.8</span>
+        <span class="pill">JSON-LD structured data</span>
+        <span class="pill">YouTube nocookie</span>
+        <span class="pill">Vimeo</span>
+        <span class="pill">Vercel CDN</span>
+      </div>
+
+      <hr class="divider" />
+
+      <h2>Rights &amp; attribution</h2>
+      <p>
+        Frame does not host any video files. All films are streamed from their original sources — YouTube and Vimeo —
+        and remain the property of their respective creators and rights holders. Frame is a nonprofit curatorial project
+        with no commercial intent.
+      </p>
+      <p>
+        If you are a rights holder and wish to have a film removed, please use the contact information
+        associated with this project.
+      </p>
+
+    </article>
+  </main>
+
+  <!-- =================== FOOTER =================== -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="footer-inner">
+      <div class="footer-logo">
+        <span class="logo-icon" aria-hidden="true">▣</span>
+        <span class="logo-text">Frame</span>
+      </div>
+      <p class="footer-tagline">Independent. Open. AI-forward.</p>
+      <nav class="footer-nav" aria-label="Footer navigation">
+        <ul role="list">
+          <li><a href="#">About</a></li>
+          <li><a href="../sources/">Sources</a></li>
+          <li><a href="../credits/">Credits</a></li>
+        </ul>
+      </nav>
+      <p class="footer-credits">
+        Films sourced from <a href="https://www.youtube.com/@dust" target="_blank" rel="noopener noreferrer">Dust</a>,
+        <a href="https://www.youtube.com/@omeleto" target="_blank" rel="noopener noreferrer">Omeleto</a>,
+        <a href="https://studio.blender.org" target="_blank" rel="noopener noreferrer">Blender Studio</a> and
+        <a href="https://runwayml.com" target="_blank" rel="noopener noreferrer">Runway</a>.
+        All rights belong to their respective creators.
+      </p>
+      <p class="footer-copy">
+        <small>© <span id="year"></span> Frame. Built with open web standards.</small>
+      </p>
+    </div>
+  </footer>
+
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

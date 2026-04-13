@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="The sources behind Frame — Runway AI Film Festival, DUST, Omeleto, and Blender open films." />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Frame" />
+  <meta property="og:title" content="Sources — Frame" />
+  <meta property="og:url" content="https://frame-navy-eta.vercel.app/sources/" />
+
+  <title>Sources — Frame</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎬</text></svg>" />
+
+  <style>
+    .static-page {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: calc(var(--header-h) + 64px) 24px 80px;
+    }
+    .static-page h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.5rem;
+    }
+    .static-page .lead {
+      font-size: 1.15rem;
+      color: var(--text-secondary);
+      margin-bottom: 3.5rem;
+      line-height: 1.7;
+    }
+    .source-card {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin-bottom: 2rem;
+      transition: border-color var(--transition-fast);
+    }
+    .source-card:hover { border-color: rgba(255,255,255,0.15); }
+    .source-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 24px 28px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .source-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      font-weight: 900;
+      flex-shrink: 0;
+    }
+    .source-icon.runway  { background: var(--ai-soft);   color: #a78bfa; }
+    .source-icon.dust    { background: rgba(229,9,20,0.12); color: var(--accent); }
+    .source-icon.omeleto { background: rgba(251,191,36,0.12); color: #fbbf24; }
+    .source-icon.blender { background: rgba(249,115,22,0.12); color: #f97316; }
+    .source-name {
+      flex: 1;
+    }
+    .source-name h2 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+    .source-name a {
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      transition: color var(--transition-fast);
+    }
+    .source-name a:hover { color: var(--text-secondary); }
+    .source-stat {
+      text-align: right;
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+    }
+    .source-stat strong {
+      display: block;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1;
+    }
+    .source-body {
+      padding: 20px 28px 24px;
+    }
+    .source-body p {
+      color: var(--text-secondary);
+      line-height: 1.8;
+      font-size: 0.9375rem;
+      margin-bottom: 0.75rem;
+    }
+    .source-body p:last-child { margin-bottom: 0; }
+    .source-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 14px;
+    }
+    .source-tag {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 3px 10px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header is-scrolled" role="banner">
+    <div class="header-inner">
+      <a href="../" class="logo" aria-label="Frame — Go to homepage">
+        <span class="logo-icon" aria-hidden="true">▣</span>
+        <span class="logo-text">Frame</span>
+      </a>
+      <nav class="main-nav" aria-label="Primary navigation">
+        <ul role="list">
+          <li><a href="../" class="nav-link">Home</a></li>
+          <li><a href="../about/" class="nav-link">About</a></li>
+          <li><a href="#" class="nav-link active">Sources</a></li>
+          <li><a href="../credits/" class="nav-link">Credits</a></li>
+        </ul>
+      </nav>
+      <div class="header-actions"></div>
+    </div>
+  </header>
+
+  <main id="main-content" tabindex="-1">
+    <div class="static-page">
+
+      <h1>Sources</h1>
+      <p class="lead">
+        Every film in Frame is hand-curated from four trusted sources. Here's what each one is about,
+        and why it was chosen.
+      </p>
+
+      <!-- RUNWAY -->
+      <div class="source-card">
+        <div class="source-header">
+          <div class="source-icon runway">AI</div>
+          <div class="source-name">
+            <h2>Runway AI Film Festival</h2>
+            <a href="https://runwayml.com/aiff" target="_blank" rel="noopener noreferrer">runwayml.com/aiff ↗</a>
+          </div>
+          <div class="source-stat"><strong>28</strong> films</div>
+        </div>
+        <div class="source-body">
+          <p>
+            The Runway AI Film Festival (AIFF) is an annual global competition celebrating the intersection
+            of artificial intelligence and filmmaking. Founded by Runway in 2023, it has received thousands
+            of submissions from over 100 countries in its first two editions.
+          </p>
+          <p>
+            The festival champions a new generation of filmmakers using generative AI tools — including
+            Runway's own Gen-2 and Gen-3 models — to create work that would not have been possible
+            through traditional production pipelines. Films range from intimate character studies to
+            surreal visual experiments.
+          </p>
+          <p>
+            Frame carries all award-winning and shortlisted films from the 2023, 2024, and 2025 editions.
+          </p>
+          <div class="source-tags">
+            <span class="source-tag">AI Generated</span>
+            <span class="source-tag">Award-winning</span>
+            <span class="source-tag">Experimental</span>
+            <span class="source-tag">International</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- DUST -->
+      <div class="source-card">
+        <div class="source-header">
+          <div class="source-icon dust">D</div>
+          <div class="source-name">
+            <h2>DUST</h2>
+            <a href="https://www.youtube.com/@dust" target="_blank" rel="noopener noreferrer">youtube.com/@dust ↗</a>
+          </div>
+          <div class="source-stat"><strong>22</strong> films</div>
+        </div>
+        <div class="source-body">
+          <p>
+            DUST is the world's largest curated collection of sci-fi short films. Founded in 2016 and owned
+            by Gunpowder &amp; Sky, the channel has amassed over 6 million subscribers and hundreds of original
+            and sourced science-fiction shorts — many of them award-winners from festivals including SXSW,
+            Tribeca, and Cannes.
+          </p>
+          <p>
+            DUST's philosophy is that science fiction is the most important genre of our time: a space to
+            explore how technology, society, and humanity intersect. Their films explore AI, space, identity,
+            time, and ethical near-futures with the rigour of literary sci-fi.
+          </p>
+          <p>
+            Frame features a selection of DUST originals and curated favourites spanning 2016 to the present.
+          </p>
+          <div class="source-tags">
+            <span class="source-tag">Science Fiction</span>
+            <span class="source-tag">Near-Future</span>
+            <span class="source-tag">Award-winning</span>
+            <span class="source-tag">Studio originals</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- OMELETO -->
+      <div class="source-card">
+        <div class="source-header">
+          <div class="source-icon omeleto">O</div>
+          <div class="source-name">
+            <h2>Omeleto</h2>
+            <a href="https://www.youtube.com/@omeleto" target="_blank" rel="noopener noreferrer">youtube.com/@omeleto ↗</a>
+          </div>
+          <div class="source-stat"><strong>20</strong> films</div>
+        </div>
+        <div class="source-body">
+          <p>
+            Omeleto is one of the world's leading curators of award-winning short films, with over 6 million
+            YouTube subscribers. Since 2012 they have been licensing and distributing independent films
+            from festival circuits worldwide — Sundance, BAFTA, OSCAR-qualifying festivals and beyond.
+          </p>
+          <p>
+            Their catalog spans drama, comedy, thriller, and everything in between. What unites them is craft:
+            precision screenwriting, strong performances, and a distinct directorial voice. Omeleto films
+            tell complete stories in 5 to 30 minutes that rival the emotional depth of feature films.
+          </p>
+          <p>
+            Frame showcases twenty of Omeleto's most celebrated titles, selected for storytelling range
+            and human resonance.
+          </p>
+          <div class="source-tags">
+            <span class="source-tag">Drama</span>
+            <span class="source-tag">Short Film</span>
+            <span class="source-tag">Festival Circuit</span>
+            <span class="source-tag">Award-winning</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- BLENDER -->
+      <div class="source-card">
+        <div class="source-header">
+          <div class="source-icon blender">B</div>
+          <div class="source-name">
+            <h2>Blender Studio &amp; Foundation</h2>
+            <a href="https://studio.blender.org" target="_blank" rel="noopener noreferrer">studio.blender.org ↗</a>
+          </div>
+          <div class="source-stat"><strong>16</strong> films</div>
+        </div>
+        <div class="source-body">
+          <p>
+            Blender Studio (formerly Blender Institute) is the production arm of the Blender Foundation,
+            the nonprofit behind the open-source 3D software Blender. Since 2006, they have produced a series
+            of "open movies" — fully animated short films created entirely with Blender and released under
+            Creative Commons licenses, with all assets freely available to the public.
+          </p>
+          <p>
+            Each open film serves a dual purpose: to push the boundaries of what Blender can achieve, and to
+            fund its continued development through community subscriptions. Films like <em>Elephants Dream</em>
+            (2006), <em>Big Buck Bunny</em> (2008), <em>Sintel</em> (2010), and <em>Cosmos Laundromat</em>
+            (2015) are milestones in open-source animation history.
+          </p>
+          <p>
+            Frame carries the complete filmography — from early experiments to contemporary titles like
+            <em>Sprite Fright</em> and <em>Wing It!</em>.
+          </p>
+          <div class="source-tags">
+            <span class="source-tag">Open Source</span>
+            <span class="source-tag">3D Animation</span>
+            <span class="source-tag">Creative Commons</span>
+            <span class="source-tag">Free Assets</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="site-footer" role="contentinfo">
+    <div class="footer-inner">
+      <div class="footer-logo">
+        <span class="logo-icon" aria-hidden="true">▣</span>
+        <span class="logo-text">Frame</span>
+      </div>
+      <p class="footer-tagline">Independent. Open. AI-forward.</p>
+      <nav class="footer-nav" aria-label="Footer navigation">
+        <ul role="list">
+          <li><a href="../about/">About</a></li>
+          <li><a href="#">Sources</a></li>
+          <li><a href="../credits/">Credits</a></li>
+        </ul>
+      </nav>
+      <p class="footer-credits">
+        Films sourced from <a href="https://www.youtube.com/@dust" target="_blank" rel="noopener noreferrer">Dust</a>,
+        <a href="https://www.youtube.com/@omeleto" target="_blank" rel="noopener noreferrer">Omeleto</a>,
+        <a href="https://studio.blender.org" target="_blank" rel="noopener noreferrer">Blender Studio</a> and
+        <a href="https://runwayml.com" target="_blank" rel="noopener noreferrer">Runway</a>.
+        All rights belong to their respective creators.
+      </p>
+      <p class="footer-copy">
+        <small>© <span id="year"></span> Frame. Built with open web standards.</small>
+      </p>
+    </div>
+  </footer>
+
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>
