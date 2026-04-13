@@ -131,8 +131,18 @@ module.exports = async (req, res) => {
           'productionCompany': { '@type': 'Organization', 'name': film.channel },
         })}</script>`
       )
-      /* canonical link — inject before </head> */
-      .replace('</head>', `  <link rel="canonical" href="${escAttr(filmUrl)}" />\n</head>`);
+      /* og:video — enables embedded player preview on Discord etc. */
+      /* inject before </head> along with canonical */
+      .replace('</head>', [
+        film.source === 'youtube'
+          ? `  <meta property="og:video" content="https://www.youtube.com/embed/${escAttr(film.videoId)}" />`
+          : `  <meta property="og:video" content="https://player.vimeo.com/video/${escAttr(film.videoId)}" />`,
+        `  <meta property="og:video:type" content="text/html" />`,
+        `  <meta property="og:video:width" content="1280" />`,
+        `  <meta property="og:video:height" content="720" />`,
+        `  <link rel="canonical" href="${escAttr(filmUrl)}" />`,
+        `</head>`,
+      ].join('\n'));
   }
 
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
