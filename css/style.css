@@ -417,14 +417,14 @@ button {
 }
 
 .row-title {
-  font-size: clamp(1.05rem, 2vw, 1.25rem);
+  font-size: clamp(1.3rem, 2.5vw, 1.65rem);
   font-weight: 700;
   color: var(--text-primary);
-  margin-bottom: 1.125rem;
+  margin-bottom: 1.25rem;
   display: flex;
   align-items: center;
   gap: 0.625rem;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
 }
 
 /* Filter chips (mobile) */
@@ -472,38 +472,57 @@ button {
    ============================================ */
 .film-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1.25rem;
 }
 
 @media (min-width: 600px) {
-  .film-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+  .film-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.25rem; }
 }
-@media (min-width: 1024px) {
-  .film-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
-}
-@media (min-width: 1400px) {
-  .film-grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+@media (min-width: 900px) {
+  .film-grid { grid-template-columns: repeat(5, 1fr); gap: 1.5rem; }
 }
 
 /* Film card */
 .film-card {
   border-radius: var(--radius-md);
   overflow: hidden;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
+  background: transparent;
+  border: none;
   cursor: pointer;
   position: relative;
-  transition: transform var(--transition-normal), box-shadow var(--transition-normal), border-color var(--transition-normal);
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
   will-change: transform;
 }
 
 .film-card:hover {
-  transform: scale(1.04) translateY(-3px);
-  box-shadow: 0 20px 48px rgba(0,0,0,0.55);
-  border-color: rgba(255,255,255,0.12);
+  transform: scale(1.05) translateY(-4px);
+  box-shadow: 0 20px 48px rgba(0,0,0,0.6);
   z-index: 5;
 }
+
+/* Card expands when video preview is playing */
+.film-card:has(.card-preview-iframe.is-visible) {
+  transform: scale(1.85) translateY(-4px);
+  z-index: 20;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.85);
+  transition: transform 350ms cubic-bezier(0.4,0,0.2,1),
+              box-shadow 350ms cubic-bezier(0.4,0,0.2,1);
+}
+
+/* Hide hover-meta text when video is playing (it's too big at 1.85x) */
+.film-card:has(.card-preview-iframe.is-visible) .thumb-hover-meta {
+  opacity: 0;
+}
+
+/* Prevent first/last column cards from overflowing viewport edges when expanded */
+.film-grid .film-card:nth-child(5n+1):has(.card-preview-iframe.is-visible) {
+  transform-origin: left center;
+}
+.film-grid .film-card:nth-child(5n):has(.card-preview-iframe.is-visible) {
+  transform-origin: right center;
+}
+
 .film-card:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
@@ -515,6 +534,7 @@ button {
   aspect-ratio: 16 / 9;
   overflow: hidden;
   background: var(--bg-surface);
+  border-radius: var(--radius-md);
 }
 
 .film-thumb img {
@@ -530,33 +550,18 @@ button {
   filter: brightness(0.75);
 }
 
-/* Play overlay */
+/* Play overlay — darkens on hover, no centered button */
 .thumb-play-overlay {
   position: absolute;
   inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   background: rgba(0,0,0,0);
   transition: background var(--transition-normal);
   pointer-events: none;
+  z-index: 2;
 }
 .film-card:hover .thumb-play-overlay { background: rgba(0,0,0,0.2); }
 
-.thumb-play-btn {
-  width: 48px; height: 48px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.92);
-  display: flex; align-items: center; justify-content: center;
-  transform: scale(0);
-  opacity: 0;
-  transition: transform var(--transition-normal), opacity var(--transition-normal);
-  pointer-events: none;
-}
-.thumb-play-btn svg { color: #111; margin-left: 3px; }
-.film-card:hover .thumb-play-btn {
-  transform: scale(1);
-  opacity: 1;
+.thumb-play-btn { display: none; }
 }
 
 /* Duration badge on thumbnail */
@@ -572,6 +577,7 @@ button {
   border-radius: 3px;
   letter-spacing: 0.03em;
   pointer-events: none;
+  z-index: 4;
 }
 
 /* AI label on thumbnail */
@@ -580,6 +586,97 @@ button {
   top: 0.5rem;
   left: 0.5rem;
   pointer-events: none;
+  z-index: 4;
+}
+
+/* Hover title/meta overlay */
+.thumb-hover-meta {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 36px 10px 10px;
+  background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, transparent 100%);
+  transform: translateY(5px);
+  opacity: 0;
+  transition: opacity 200ms ease, transform 200ms ease;
+  z-index: 3;
+  pointer-events: none;
+}
+.film-card:hover .thumb-hover-meta {
+  opacity: 1;
+  transform: translateY(0);
+}
+.thumb-hover-title {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.3;
+  margin-bottom: 2px;
+}
+.thumb-hover-sub {
+  font-size: 0.7rem;
+  color: rgba(255,255,255,0.6);
+}
+
+/* Card hover video preview iframe */
+.card-preview-iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  z-index: 1;
+  pointer-events: none;
+}
+.card-preview-iframe.is-visible {
+  opacity: 1;
+}
+
+/* card-osd: never visible (OSD only applies to the modal/detail player) */
+.card-osd { display: none; }
+.card-osd-badges {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 5px;
+  flex-wrap: wrap;
+}
+.osd-badge {
+  font-size: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 2px 5px;
+  border-radius: 3px;
+  text-transform: uppercase;
+  line-height: 1.3;
+}
+.osd-genre {
+  background: rgba(255,255,255,0.18);
+  color: #fff;
+}
+.osd-ai {
+  background: #6c63ff;
+  color: #fff;
+}
+.card-osd-title {
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 3px;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.card-osd-meta {
+  font-size: 0.5rem;
+  color: rgba(255,255,255,0.65);
+  line-height: 1.3;
 }
 
 /* Continue-watching progress bar */
@@ -669,57 +766,44 @@ button {
    TOP 10 ROW
    ============================================ */
 .top10-grid {
-  display: flex;
-  gap: 0;
-  overflow-x: auto;
-  padding-bottom: 12px;
-  scroll-snap-type: x mandatory;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 36px 20px;
 }
-.top10-grid::-webkit-scrollbar { display: none; }
 
 .top10-item {
   position: relative;
-  flex: 0 0 auto;
-  width: 190px;
-  /* each item has the number + card overlapping — negative margin pulls card left */
-  margin-left: -28px;
-  scroll-snap-align: start;
   cursor: pointer;
 }
-.top10-item:first-child { margin-left: 0; }
 
 .top10-num {
   position: absolute;
   left: 0;
-  bottom: -8px;
-  font-size: 9rem;
+  bottom: -10px;
+  font-size: clamp(7rem, 8vw, 10.5rem);
   font-weight: 900;
   line-height: 1;
-  /* outlined stroke, no fill */
   color: transparent;
-  -webkit-text-stroke: 2.5px rgba(255,255,255,0.18);
-  text-stroke: 2.5px rgba(255,255,255,0.18);
+  -webkit-text-stroke: 2.5px rgba(255,255,255,0.16);
+  text-stroke: 2.5px rgba(255,255,255,0.16);
   letter-spacing: -0.05em;
   user-select: none;
   pointer-events: none;
   z-index: 0;
-  /* subtle accent glow on num */
-  text-shadow: 0 0 40px rgba(229,9,20,0.12);
+  text-shadow: 0 0 48px rgba(229,9,20,0.10);
   transition: -webkit-text-stroke var(--transition-fast),
               text-shadow var(--transition-fast);
 }
 
 .top10-item:hover .top10-num {
-  -webkit-text-stroke-color: rgba(229,9,20,0.55);
-  text-shadow: 0 0 50px rgba(229,9,20,0.3);
+  -webkit-text-stroke-color: rgba(229,9,20,0.6);
+  text-shadow: 0 0 60px rgba(229,9,20,0.35);
 }
 
 .top10-card {
   position: relative;
   z-index: 1;
-  margin-left: 52px; /* push card right so number is visible behind */
+  margin-left: 80px; /* enough room for two-digit numbers */
   border-radius: var(--radius-md);
   overflow: hidden;
   background: var(--bg-card);
@@ -727,13 +811,30 @@ button {
 }
 
 .top10-item:hover .top10-card {
-  transform: scale(1.04) translateY(-4px);
-  box-shadow: 0 12px 40px rgba(0,0,0,0.7);
+  transform: scale(1.05) translateY(-5px);
+  box-shadow: 0 14px 44px rgba(0,0,0,0.75);
+}
+
+/* Top10 card expands when video preview plays */
+.top10-item:has(.card-preview-iframe.is-visible) {
+  z-index: 20;
+}
+.top10-item:has(.card-preview-iframe.is-visible) .top10-card {
+  transform: scale(1.85) translateY(-5px);
+  box-shadow: 0 32px 80px rgba(0,0,0,0.85);
+  transition: transform 350ms cubic-bezier(0.4,0,0.2,1),
+              box-shadow 350ms cubic-bezier(0.4,0,0.2,1);
+}
+.top10-grid .top10-item:nth-child(5n+1):has(.card-preview-iframe.is-visible) .top10-card {
+  transform-origin: left center;
+}
+.top10-grid .top10-item:nth-child(5n):has(.card-preview-iframe.is-visible) .top10-card {
+  transform-origin: right center;
 }
 
 .top10-card img {
-  width: 130px;
-  height: 185px;
+  width: 100%;
+  height: 220px;
   object-fit: cover;
   display: block;
 }
@@ -741,20 +842,20 @@ button {
 .top10-card .top10-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 60%);
+  background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 55%);
   opacity: 0;
   transition: opacity var(--transition-fast);
   display: flex;
   align-items: flex-end;
-  padding: 8px;
+  padding: 10px;
 }
 .top10-item:hover .top10-overlay { opacity: 1; }
 
 .top10-play-btn {
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
-  background: rgba(255,255,255,0.9);
+  background: rgba(255,255,255,0.92);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -762,14 +863,28 @@ button {
   flex-shrink: 0;
 }
 
+@media (max-width: 900px) {
+  .top10-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px 14px;
+  }
+}
+
+@media (max-width: 560px) {
+  .top10-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px 10px;
+  }
+}
+
 /* ============================================
    MODAL
    ============================================ */
 dialog.film-modal {
   margin: auto;
-  max-width: min(860px, 95vw);
+  max-width: min(920px, 96vw);
   width: 100%;
-  background: var(--bg-surface);
+  background: #000;
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: 0;
@@ -796,10 +911,10 @@ dialog.film-modal::backdrop {
   position: absolute;
   top: 0.875rem;
   right: 0.875rem;
-  z-index: 10;
+  z-index: 30;
   width: 36px; height: 36px;
   border-radius: 50%;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0,0,0,0.6);
   color: #fff;
   font-size: 1rem;
   display: flex; align-items: center; justify-content: center;
@@ -837,25 +952,92 @@ dialog.film-modal::backdrop {
 }
 .plyr__control:hover { background: var(--accent) !important; }
 
-/* Modal body */
-.modal-body {
-  padding: 1.5rem;
+/* ============================================
+   OSD — On-Screen Display
+   ============================================ */
+
+/* OSD idle panel — hidden by default, only shows when user opens it while playing */
+/* ============================================
+   OSD — On-Screen Display
+   Controlled entirely via JS using [hidden] attribute.
+   No opacity/class cascade — works reliably with YouTube iframes.
+   ============================================ */
+
+/* ⓘ button — injected into Plyr's control bar; Plyr provides base plyr__control styles */
+.osd-info-btn {
+  /* no position:absolute — lives in flex flow of Plyr controls */
+  color: inherit;
+  flex-shrink: 0;
+}
+.osd-info-btn[hidden] { display: none !important; }
+.osd-info-btn.is-active {
+  background: rgba(255,255,255,0.9) !important;
+  color: #000 !important;
 }
 
-.modal-meta {
+/* OSD info panel — injected into .plyr by JS; clears the Plyr controls bar (~52px) */
+.osd-panel {
+  position: absolute;
+  inset: auto 0 52px 0;   /* bottom:52px = above Plyr controls; overridden in fullscreen via media */
+  background: linear-gradient(
+    to top,
+    rgba(0,0,0,0.97) 0%,
+    rgba(0,0,0,0.82) 40%,
+    rgba(0,0,0,0.5)  65%,
+    transparent      85%
+  );
+  z-index: 9;
+  animation: osdIn 220ms ease;
+  pointer-events: none;   /* let Plyr controls beneath receive clicks */
+}
+/* Re-enable pointer events only on the content area */
+.osd-panel-inner {
+  pointer-events: auto;
+}
+.osd-panel[hidden] { display: none; }
+@keyframes osdIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.osd-panel-inner {
+  padding: 72px 1.75rem 1.5rem;
+}
+
+/* Text inside the panel — white on dark gradient */
+.osd-panel .modal-meta {
   display: flex;
   align-items: center;
   gap: 0.625rem;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
   flex-wrap: wrap;
 }
+.osd-panel .modal-year,
+.osd-panel .modal-duration { color: rgba(255,255,255,0.7); }
+.osd-panel .modal-title {
+  font-size: clamp(1.1rem, 2.5vw, 1.55rem);
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+.osd-panel .modal-description {
+  font-size: 0.875rem;
+  color: rgba(255,255,255,0.78);
+  line-height: 1.6;
+  margin-bottom: 0.75rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.osd-panel .modal-source { color: rgba(255,255,255,0.5); margin-bottom: 0.625rem; }
+.osd-panel .modal-source strong { color: rgba(255,255,255,0.75); }
+.osd-panel .modal-tags { display: flex; flex-wrap: wrap; gap: 0.375rem; margin-bottom: 0.25rem; }
 
+/* Base modal meta styles (used outside OSD too) */
 .modal-year,
 .modal-duration {
   font-size: 0.8125rem;
   color: var(--text-secondary);
 }
-
 .modal-title {
   font-size: clamp(1.25rem, 3vw, 1.75rem);
   font-weight: 700;
@@ -863,26 +1045,19 @@ dialog.film-modal::backdrop {
   letter-spacing: -0.025em;
   line-height: 1.2;
 }
-
 .modal-description {
   font-size: 0.9375rem;
   color: rgba(240,240,245,0.82);
   line-height: 1.7;
   margin-bottom: 1rem;
 }
-
 .modal-source {
   font-size: 0.8125rem;
   color: var(--text-muted);
   margin-bottom: 0.875rem;
 }
 .modal-source strong { color: var(--text-secondary); }
-
-.modal-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.375rem;
-}
+.modal-tags { display: flex; flex-wrap: wrap; gap: 0.375rem; }
 .tag-chip {
   padding: 0.2rem 0.6rem;
   border-radius: 20px;
@@ -1063,25 +1238,36 @@ dialog.film-modal::backdrop {
 }
 
 /* View full details link (inside modal) */
+.modal-actions {
+  padding: 0.875rem 1.25rem;
+  background: var(--bg-surface);
+}
 .btn-view-details {
   display: inline-flex;
   align-items: center;
   gap: 0.375rem;
-  margin-top: 1rem;
-  padding: 0.5rem 1rem;
+  margin-top: 0;
+  padding: 0.6rem 1.25rem;
   border-radius: var(--radius-sm);
-  font-size: 0.8125rem;
-  font-weight: 600;
-  color: var(--text-secondary);
-  background: var(--bg-hover);
-  border: 1px solid var(--border);
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #0a0a0f;
+  background: #f5c518;          /* IMDb-amber — warm, distinctive, readable */
+  border: none;
   text-decoration: none;
-  transition: color var(--transition-fast), background var(--transition-fast), border-color var(--transition-fast);
+  letter-spacing: 0.01em;
+  transition: background var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+  box-shadow: 0 2px 12px rgba(245,197,24,0.25);
 }
 .btn-view-details:hover {
-  color: var(--text-primary);
-  border-color: rgba(255,255,255,0.2);
-  background: rgba(255,255,255,0.06);
+  color: #0a0a0f;
+  background: #ffd23f;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(245,197,24,0.4);
+}
+.btn-view-details:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(245,197,24,0.2);
 }
 
 /* Related film cards use <a> — make them block */
@@ -1187,7 +1373,7 @@ body.page-leaving {
   inset: 0;
   background-size: cover;
   background-position: center;
-  z-index: 2;
+  z-index: 20;
   display: flex;
   align-items: center;
   justify-content: center;

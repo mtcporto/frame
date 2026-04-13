@@ -148,6 +148,16 @@ function render(film, catalog) {
   const aiBadge = document.getElementById('fd-ai-badge');
   if (aiBadge) aiBadge.hidden = !film.aiGenerated;
 
+  // OSD elements (same data, overlaid on player)
+  document.getElementById('fd-osd-category').textContent = (film.category[0] || '').toUpperCase();
+  document.getElementById('fd-osd-year').textContent     = film.year;
+  document.getElementById('fd-osd-duration').textContent = film.durationLabel;
+  document.getElementById('fd-osd-title').textContent    = film.title;
+  document.getElementById('fd-osd-description').textContent = film.description;
+  document.getElementById('fd-osd-channel').textContent  = film.channel;
+  const osdAiBadge = document.getElementById('fd-osd-ai-badge');
+  if (osdAiBadge) osdAiBadge.hidden = !film.aiGenerated;
+
   document.getElementById('fd-tags').innerHTML = film.tags
     .map((t) => `<span class="tag-chip">${escHtml(t)}</span>`)
     .join('');
@@ -191,6 +201,51 @@ function renderPlayer(film, poster) {
   };
   player.once('ready',   () => setTimeout(removePoster, 150));
   player.once('playing', removePoster);
+
+  // ── OSD behaviour ──────────────────────────────────────────
+  // Inject ⓘ into Plyr's control bar after it's built (works in fullscreen).
+  const infoPanel = document.getElementById('fd-osd-panel');
+  infoPanel.hidden = true;
+  let infoBtn = null;
+
+  const OSD_SVG = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8h.01M12 12v4"/></svg>`;
+
+  player.once('ready', () => {
+    const plyrContainer = player.elements && player.elements.container;
+    const controls = player.elements && player.elements.controls;
+    if (!controls || !plyrContainer) return;
+
+    // Move osd-panel inside .plyr so it's part of the fullscreen element
+    plyrContainer.appendChild(infoPanel);
+    infoPanel.hidden = true;
+
+    infoBtn = document.createElement('button');
+    infoBtn.type = 'button';
+    infoBtn.className = 'plyr__control osd-info-btn';
+    infoBtn.setAttribute('aria-label', 'Film info');
+    infoBtn.innerHTML = OSD_SVG;
+    infoBtn.hidden = true;
+    const fsBtn = controls.querySelector('[data-plyr="fullscreen"]');
+    if (fsBtn) controls.insertBefore(infoBtn, fsBtn);
+    else controls.appendChild(infoBtn);
+    infoBtn.addEventListener('click', () => {
+      const opening = infoPanel.hidden;
+      infoPanel.hidden = !opening;
+      infoBtn.classList.toggle('is-active', opening);
+    });
+  });
+
+  const showOsdBtn = () => { if (infoBtn) infoBtn.hidden = false; };
+  const hideOsdAll = () => {
+    if (infoBtn) { infoBtn.hidden = true; infoBtn.classList.remove('is-active'); }
+    infoPanel.hidden = true;
+  };
+
+  player.on('play',    showOsdBtn);
+  player.on('playing', showOsdBtn);
+  player.on('pause',   hideOsdAll);
+  player.on('ended',   hideOsdAll);
+  // ──────────────────────────────────────────────────────────
 }
 
 /* ============================================

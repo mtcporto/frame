@@ -75,12 +75,30 @@
     <div class="fd-inner">
 
       <!-- Player -->
-      <div class="fd-player-wrap">
+      <div class="fd-player-wrap" id="fd-player-wrap">
         <div id="fd-player" class="plyr-container"></div>
         <div class="modal-poster" id="fd-poster" aria-hidden="true">
           <div class="modal-poster-spinner-wrap">
             <div class="modal-poster-spinner"></div>
             <span>Loading video…</span>
+          </div>
+        </div>
+        <!-- ⓘ button injected into Plyr controls bar by JS after ready -->
+        <!-- OSD panel — appears over the video on ⓘ click -->
+        <div class="osd-panel" id="fd-osd-panel" hidden>
+          <div class="osd-panel-inner">
+            <div class="modal-meta">
+              <span class="badge badge-category" id="fd-osd-category"></span>
+              <span class="modal-year" id="fd-osd-year"></span>
+              <span class="modal-duration" id="fd-osd-duration"></span>
+              <span class="ai-badge" id="fd-osd-ai-badge" aria-label="AI Generated" hidden>AI</span>
+            </div>
+            <h2 class="modal-title" id="fd-osd-title"></h2>
+            <p class="modal-description" id="fd-osd-description"></p>
+            <div class="modal-source">
+              <span>Source: </span>
+              <strong id="fd-osd-channel"></strong>
+            </div>
           </div>
         </div>
       </div>

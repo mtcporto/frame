@@ -15,6 +15,7 @@ const state = {
   currentFilter: 'all',
   searchQuery: '',
   progressMap: {},          // { filmId: secondsWatched }
+  viewsMap: {},             // { filmId: openCount }
   currentPlayer: null,
   currentFilm: null,
 };
@@ -45,6 +46,18 @@ const Storage = {
   saveSession(obj) {
     try { localStorage.setItem(this.KEY_SESSION, JSON.stringify(obj)); } catch { /* quota */ }
   },
+
+  KEY_VIEWS: 'frame_views',
+
+  loadViews() {
+    try {
+      return JSON.parse(localStorage.getItem(this.KEY_VIEWS) || '{}');
+    } catch { return {}; }
+  },
+
+  saveViews(map) {
+    try { localStorage.setItem(this.KEY_VIEWS, JSON.stringify(map)); } catch { /* quota */ }
+  },
 };
 
 /* ============================================
@@ -74,6 +87,7 @@ const Dom = {
   gridContinue: $('#grid-continue'),
 
   modal: $('#film-modal'),
+  modalPlayerWrap: $('#modal-player-wrap'),
   modalPlayer: $('#modal-player'),
   modalTitle: $('#modal-title'),
   modalDescription: $('#modal-description'),
@@ -85,6 +99,7 @@ const Dom = {
   modalAiBadge: $('#modal-ai-badge'),
   modalViewDetails: $('#modal-view-details'),
   modalClose: $('.modal-close'),
+  osdPanel: $('#osd-panel'),
 
   btnSearch: $('.btn-search'),
   searchBar: $('.search-bar'),
@@ -102,6 +117,7 @@ const Dom = {
 async function init() {
   Dom.yearSpan.textContent = new Date().getFullYear();
   state.progressMap = Storage.loadProgress();
+  state.viewsMap    = Storage.loadViews();
 
   renderSkeletons();
 
@@ -193,10 +209,6 @@ function renderSkeletons() {
     g.innerHTML = Array.from({ length: 4 }, () => `
       <div class="skeleton-card" aria-hidden="true">
         <div class="skeleton-thumb"></div>
-        <div class="skeleton-body">
-          <div class="skeleton skeleton-line medium"></div>
-          <div class="skeleton skeleton-line short"></div>
-        </div>
       </div>
     `).join('');
   });
@@ -282,10 +294,19 @@ function renderTop10() {
   const container = Dom.gridTop10;
   if (!container) return;
 
-  const films = state.top10
-    .map((id) => state.catalog.find((f) => f.id === id))
-    .filter(Boolean);
+  // Merge user-viewed films (sorted by view count) with the editorial seed,
+  // deduplicated, capped at 10. Out-of-the-box everyone sees the curated list;
+  // it personalises over time as they open films.
+  const viewed = Object.keys(state.viewsMap)
+    .filter((id) => state.viewsMap[id] > 0)
+    .sort((a, b) => state.viewsMap[b] - state.viewsMap[a]);
 
+  const seen = new Set();
+  const ids = [...viewed, ...state.top10]
+    .filter((id) => { if (seen.has(id)) return false; seen.add(id); return true; })
+    .slice(0, 10);
+
+  const films = ids.map((id) => state.catalog.find((f) => f.id === id)).filter(Boolean);
   if (!films.length) return;
 
   container.innerHTML = films.map((film, i) => `
@@ -311,6 +332,14 @@ function renderTop10() {
             <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
           </div>
         </div>
+        <div class="card-osd" aria-hidden="true">
+          <div class="card-osd-badges">
+            ${film.category[0] ? `<span class="osd-badge osd-genre">${escHtml(film.category[0].toUpperCase())}</span>` : ''}
+            ${film.aiGenerated ? `<span class="osd-badge osd-ai">AI</span>` : ''}
+          </div>
+          <p class="card-osd-title">${escHtml(film.title)}</p>
+          <div class="card-osd-meta">${film.year} · ${escHtml(film.durationLabel)}</div>
+        </div>
       </div>
     </div>
   `).join('');
@@ -322,6 +351,35 @@ function renderTop10() {
     item.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openModal(film); }
     });
+
+    // Hover video preview (same pattern as renderGrid)
+    if (film.source === 'youtube') {
+      let previewTimer = null;
+      let showTimer = null;
+      let previewFrame = null;
+
+      item.addEventListener('mouseenter', () => {
+        previewTimer = setTimeout(() => {
+          const card = item.querySelector('.top10-card');
+          if (!card) return;
+          const iframe = document.createElement('iframe');
+          iframe.className = 'card-preview-iframe';
+          iframe.src = `https://www.youtube-nocookie.com/embed/${film.videoId}?autoplay=1&mute=1&controls=0&disablekb=1&loop=1&playlist=${film.videoId}&rel=0&iv_load_policy=3&playsinline=1&start=8`;
+          iframe.allow = 'autoplay; encrypted-media';
+          iframe.setAttribute('tabindex', '-1');
+          iframe.setAttribute('aria-hidden', 'true');
+          card.appendChild(iframe);
+          previewFrame = iframe;
+          showTimer = setTimeout(() => iframe.classList.add('is-visible'), 450);
+        }, 800);
+      });
+
+      item.addEventListener('mouseleave', () => {
+        clearTimeout(previewTimer);
+        clearTimeout(showTimer);
+        if (previewFrame) { previewFrame.remove(); previewFrame = null; }
+      });
+    }
   });
 }
 
@@ -362,6 +420,35 @@ function renderGrid(container, films) {
     };
     card.addEventListener('mouseenter', prefetch, { once: true });
     card.addEventListener('focusin', prefetch, { once: true });
+
+    // Hover video preview — inject muted autoplay iframe after short delay
+    if (film.source === 'youtube') {
+      let previewTimer = null;
+      let showTimer = null;
+      let previewFrame = null;
+
+      card.addEventListener('mouseenter', () => {
+        previewTimer = setTimeout(() => {
+          const thumb = card.querySelector('.film-thumb');
+          if (!thumb) return;
+          const iframe = document.createElement('iframe');
+          iframe.className = 'card-preview-iframe';
+          iframe.src = `https://www.youtube-nocookie.com/embed/${film.videoId}?autoplay=1&mute=1&controls=0&disablekb=1&loop=1&playlist=${film.videoId}&rel=0&iv_load_policy=3&playsinline=1&start=8`;
+          iframe.allow = 'autoplay; encrypted-media';
+          iframe.setAttribute('tabindex', '-1');
+          iframe.setAttribute('aria-hidden', 'true');
+          thumb.appendChild(iframe);
+          previewFrame = iframe;
+          showTimer = setTimeout(() => iframe.classList.add('is-visible'), 450);
+        }, 800);
+      });
+
+      card.addEventListener('mouseleave', () => {
+        clearTimeout(previewTimer);
+        clearTimeout(showTimer);
+        if (previewFrame) { previewFrame.remove(); previewFrame = null; }
+      });
+    }
   });
 }
 
@@ -407,6 +494,10 @@ function cardHTML(film) {
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
           </div>
         </div>
+        <div class="thumb-hover-meta" aria-hidden="true">
+          <p class="thumb-hover-title">${escHtml(film.title)}</p>
+          <div class="thumb-hover-sub">${escHtml(film.channel)} · ${film.year}</div>
+        </div>
         <span class="thumb-duration" aria-label="Duration: ${escHtml(film.durationLabel)}">${escHtml(film.durationLabel)}</span>
         ${film.aiGenerated ? `<span class="thumb-ai-label ai-badge" aria-label="AI Generated">AI</span>` : ''}
         ${identityLabel}
@@ -415,14 +506,13 @@ function cardHTML(film) {
             <div class="thumb-progress-fill" style="width:${pct}%"></div>
           </div>
         ` : ''}
-      </div>
-
-      <div class="film-body">
-        <h3 class="film-title" itemprop="name">${escHtml(film.title)}</h3>
-        <div class="film-meta">
-          <span class="film-channel" itemprop="productionCompany">${escHtml(film.channel)}</span>
-          <span aria-hidden="true">·</span>
-          <time class="film-year" datetime="${film.year}" itemprop="datePublished">${film.year}</time>
+        <div class="card-osd" aria-hidden="true">
+          <div class="card-osd-badges">
+            ${film.category[0] ? `<span class="osd-badge osd-genre">${escHtml(film.category[0].toUpperCase())}</span>` : ''}
+            ${film.aiGenerated ? `<span class="osd-badge osd-ai">AI</span>` : ''}
+          </div>
+          <p class="card-osd-title">${escHtml(film.title)}</p>
+          <div class="card-osd-meta">${film.year} · ${escHtml(film.durationLabel)}</div>
         </div>
       </div>
     </article>
@@ -451,6 +541,10 @@ function renderContinueWatching() {
 function openModal(film) {
   state.currentFilm = film;
   Storage.saveSession({ filter: state.currentFilter });
+
+  // Track view count for Top 10 personalisation
+  state.viewsMap[film.id] = (state.viewsMap[film.id] || 0) + 1;
+  Storage.saveViews(state.viewsMap);
 
   // populate metadata
   Dom.modalTitle.textContent = film.title;
@@ -537,6 +631,51 @@ function openModal(film) {
   player.once('ready', () => setTimeout(removePoster, 150));
   player.once('playing', removePoster);
 
+  // ── OSD behaviour ──────────────────────────────────────────
+  // Inject ⓘ button into Plyr's control bar after it's built.
+  // This makes it visible in fullscreen automatically.
+  Dom.osdPanel.hidden = true;
+  let osdBtn = null;
+
+  const OSD_SVG = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8h.01M12 12v4"/></svg>`;
+
+  player.once('ready', () => {
+    const plyrContainer = player.elements && player.elements.container;
+    const controls = player.elements && player.elements.controls;
+    if (!controls || !plyrContainer) return;
+
+    // Move osd-panel inside .plyr so it's part of the fullscreen element
+    plyrContainer.appendChild(Dom.osdPanel);
+    Dom.osdPanel.hidden = true;
+
+    osdBtn = document.createElement('button');
+    osdBtn.type = 'button';
+    osdBtn.className = 'plyr__control osd-info-btn';
+    osdBtn.setAttribute('aria-label', 'Film info');
+    osdBtn.innerHTML = OSD_SVG;
+    osdBtn.hidden = true;
+    const fsBtn = controls.querySelector('[data-plyr="fullscreen"]');
+    if (fsBtn) controls.insertBefore(osdBtn, fsBtn);
+    else controls.appendChild(osdBtn);
+    osdBtn.addEventListener('click', () => {
+      const opening = Dom.osdPanel.hidden;
+      Dom.osdPanel.hidden = !opening;
+      osdBtn.classList.toggle('is-active', opening);
+    });
+  });
+
+  const showOsdBtn = () => { if (osdBtn) osdBtn.hidden = false; };
+  const hideOsdAll = () => {
+    if (osdBtn) { osdBtn.hidden = true; osdBtn.classList.remove('is-active'); }
+    Dom.osdPanel.hidden = true;
+  };
+
+  player.on('play',    showOsdBtn);
+  player.on('playing', showOsdBtn);
+  player.on('pause',   hideOsdAll);
+  player.on('ended',   hideOsdAll);
+  // ──────────────────────────────────────────────────────────
+
   Dom.modal.showModal();
   Dom.modal.focus();
 }
@@ -552,7 +691,12 @@ function destroyPlayer() {
 }
 
 function closeModal() {
+  // Rescue osd-panel from inside .plyr before destroyPlayer wipes the DOM
+  Dom.modalPlayerWrap.appendChild(Dom.osdPanel);
+  Dom.osdPanel.hidden = true;
   destroyPlayer();
+  // reset OSD state
+  Dom.modalPlayerWrap.classList.remove('is-playing', 'osd-ctrl-visible', 'osd-info-open');
   Dom.modal.close();
   Dom.modalPlayer.innerHTML = '';
   // flush any un-saved progress

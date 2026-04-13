@@ -186,31 +186,39 @@
     <div class="modal-inner">
       <button class="modal-close" aria-label="Close film details">✕</button>
 
-      <div class="modal-player-wrap">
+      <div class="modal-player-wrap" id="modal-player-wrap">
         <div id="modal-player" class="plyr-container"></div>
+
+        <!-- ⓘ button injected into Plyr controls bar by JS after ready -->
+
+        <!-- OSD panel — appears over the video on ⓘ click -->
+        <div class="osd-panel" id="osd-panel" hidden>
+          <div class="osd-panel-inner">
+            <div class="modal-meta">
+              <span class="badge badge-category" id="modal-category"></span>
+              <span class="modal-year" id="modal-year"></span>
+              <span class="modal-duration" id="modal-duration"></span>
+              <span class="ai-badge" id="modal-ai-badge" aria-label="AI Generated" hidden>AI</span>
+            </div>
+            <h2 class="modal-title" id="modal-title"></h2>
+            <p class="modal-description" id="modal-description"></p>
+            <div class="modal-source">
+              <span>Source: </span>
+              <strong id="modal-channel"></strong>
+            </div>
+            <div class="modal-tags" id="modal-tags" aria-label="Tags"></div>
+          </div>
+        </div>
       </div>
 
-      <div class="modal-body">
-        <article>
-          <div class="modal-meta">
-            <span class="badge badge-category" id="modal-category"></span>
-            <span class="modal-year" id="modal-year"></span>
-            <span class="modal-duration" id="modal-duration"></span>
-            <span class="ai-badge" id="modal-ai-badge" aria-label="AI Generated" hidden>AI</span>
-          </div>
-          <h2 class="modal-title" id="modal-title"></h2>
-          <p class="modal-description" id="modal-description"></p>
-          <div class="modal-source">
-            <span>Source: </span>
-            <strong id="modal-channel"></strong>
-          </div>
-          <div class="modal-tags" id="modal-tags" aria-label="Tags"></div>
-          <a class="btn-view-details" id="modal-view-details" href="#">
-            View Full Details
-            <svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9,18 15,12 9,6"/></svg>
-          </a>
-        </article>
+      <!-- Always-visible strip: View Full Details button -->
+      <div class="modal-actions">
+        <a class="btn-view-details" id="modal-view-details" href="#">
+          View Full Details
+          <svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9,18 15,12 9,6"/></svg>
+        </a>
       </div>
+
     </div>
   </dialog>
 
