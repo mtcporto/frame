@@ -1,5 +1,6 @@
 {
   "rewrites": [
-    { "source": "/film/:slug", "destination": "/film/index.html" }
+    { "source": "/film/:slug", "destination": "/api/film/:slug" }
   ]
 }
+
