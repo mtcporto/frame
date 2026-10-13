@@ -1147,31 +1147,6 @@
     },
     {
       "@type": "Movie",
-      "id": "omeleto-hugh",
-      "title": "Hugh",
-      "description": "Every day, a reclusive older man receives a delivery of paint, brushes a streak on his wall, and sits to watch it dry. A quietly moving portrait of grief and ritual.",
-      "source": "youtube",
-      "videoId": "rcycvbTM3yU",
-      "thumbnail": "https://img.youtube.com/vi/rcycvbTM3yU/maxresdefault.jpg",
-      "category": [
-        "drama",
-        "short"
-      ],
-      "channel": "Omeleto",
-      "duration": "PT22M55S",
-      "durationLabel": "22:55",
-      "year": 2026,
-      "tags": [
-        "drama",
-        "short-film",
-        "award-winning"
-      ],
-      "aiGenerated": false,
-      "featured": false,
-      "staffPick": false
-    },
-    {
-      "@type": "Movie",
       "id": "omeleto-knead",
       "title": "Knead",
       "description": "In 1963, a suburban wife whose beautiful handmade pastries are taken for granted begins making quiet plans of her own.",
@@ -1185,56 +1160,6 @@
       "channel": "Omeleto",
       "duration": "PT11M35S",
       "durationLabel": "11:35",
-      "year": 2026,
-      "tags": [
-        "drama",
-        "short-film",
-        "award-winning"
-      ],
-      "aiGenerated": false,
-      "featured": false,
-      "staffPick": false
-    },
-    {
-      "@type": "Movie",
-      "id": "omeleto-girls-together",
-      "title": "Girls Together",
-      "description": "Three best friends who every summer build a fort in the woods find themselves no longer quite the same people they once were.",
-      "source": "youtube",
-      "videoId": "Fprm5x4aQzY",
-      "thumbnail": "https://img.youtube.com/vi/Fprm5x4aQzY/maxresdefault.jpg",
-      "category": [
-        "drama",
-        "short"
-      ],
-      "channel": "Omeleto",
-      "duration": "PT16M7S",
-      "durationLabel": "16:07",
-      "year": 2026,
-      "tags": [
-        "drama",
-        "short-film",
-        "award-winning"
-      ],
-      "aiGenerated": false,
-      "featured": false,
-      "staffPick": false
-    },
-    {
-      "@type": "Movie",
-      "id": "omeleto-buscando-alma",
-      "title": "Buscando Alma",
-      "description": "Twenty years after being separated at the border, a mother and child from Honduras finally reunite — navigating the distance that time and trauma have opened between them.",
-      "source": "youtube",
-      "videoId": "d3xNfWyHsfo",
-      "thumbnail": "https://img.youtube.com/vi/d3xNfWyHsfo/maxresdefault.jpg",
-      "category": [
-        "drama",
-        "short"
-      ],
-      "channel": "Omeleto",
-      "duration": "PT15M25S",
-      "durationLabel": "15:25",
       "year": 2026,
       "tags": [
         "drama",
@@ -1372,31 +1297,6 @@
     },
     {
       "@type": "Movie",
-      "id": "omeleto-sorry",
-      "title": "Sorry",
-      "description": "After receiving the wrong takeout order three hours late, a woman just wants to move on — but her friend insists she call and demand a refund, setting off an unexpectedly complicated chain of events.",
-      "source": "youtube",
-      "videoId": "0-7qtbbGnKY",
-      "thumbnail": "https://img.youtube.com/vi/0-7qtbbGnKY/maxresdefault.jpg",
-      "category": [
-        "drama",
-        "short"
-      ],
-      "channel": "Omeleto",
-      "duration": "PT11M23S",
-      "durationLabel": "11:23",
-      "year": 2026,
-      "tags": [
-        "drama",
-        "short-film",
-        "award-winning"
-      ],
-      "aiGenerated": false,
-      "featured": false,
-      "staffPick": false
-    },
-    {
-      "@type": "Movie",
       "id": "omeleto-coffee-shop-names",
       "title": "Coffee Shop Names",
       "description": "Three co-workers waiting for their café orders — all placed under anglicized names — find a small moment of identity, humor, and recognition.",
@@ -1447,31 +1347,6 @@
     },
     {
       "@type": "Movie",
-      "id": "omeleto-perception",
-      "title": "Perception",
-      "description": "A seemingly normal suburban family — doctor father, professional mother, well-behaved children — harbors a secret that slowly changes everything about how they look.",
-      "source": "youtube",
-      "videoId": "hTap_OPwLc8",
-      "thumbnail": "https://img.youtube.com/vi/hTap_OPwLc8/maxresdefault.jpg",
-      "category": [
-        "drama",
-        "short"
-      ],
-      "channel": "Omeleto",
-      "duration": "PT12M15S",
-      "durationLabel": "12:15",
-      "year": 2026,
-      "tags": [
-        "drama",
-        "short-film",
-        "award-winning"
-      ],
-      "aiGenerated": false,
-      "featured": false,
-      "staffPick": false
-    },
-    {
-      "@type": "Movie",
       "id": "omeleto-spit-it-out",
       "title": "Spit It Out",
       "description": "A man gathers his entire family at his home to unveil the results of a DNA test — and the revelation turns an affectionate family gathering into something far more complicated.",
@@ -1497,31 +1372,6 @@
     },
     {
       "@type": "Movie",
-      "id": "omeleto-dos-bros-force",
-      "title": "Dos Bros Force",
-      "description": "In late-90s Los Angeles, two siblings in an immigrant family struggling with money plan a birthday surprise — a warm and funny story about love, sacrifice, and belonging.",
-      "source": "youtube",
-      "videoId": "TkF1i5PKxtk",
-      "thumbnail": "https://img.youtube.com/vi/TkF1i5PKxtk/maxresdefault.jpg",
-      "category": [
-        "drama",
-        "short"
-      ],
-      "channel": "Omeleto",
-      "duration": "PT15M20S",
-      "durationLabel": "15:20",
-      "year": 2026,
-      "tags": [
-        "drama",
-        "short-film",
-        "award-winning"
-      ],
-      "aiGenerated": false,
-      "featured": false,
-      "staffPick": false
-    },
-    {
-      "@type": "Movie",
       "id": "omeleto-zapinos",
       "title": "Zapinos",
       "description": "A man meets a stranger to buy a rare Pokémon card — and from the very first awkward moment, the simple transaction spirals into something far stranger.",
@@ -1535,56 +1385,6 @@
       "channel": "Omeleto",
       "duration": "PT15M38S",
       "durationLabel": "15:38",
-      "year": 2026,
-      "tags": [
-        "drama",
-        "short-film",
-        "award-winning"
-      ],
-      "aiGenerated": false,
-      "featured": false,
-      "staffPick": false
-    },
-    {
-      "@type": "Movie",
-      "id": "omeleto-toast-soldiers",
-      "title": "Toast Soldiers",
-      "description": "A couple on their last round of IVF after an earlier loss clings to hope and each other, in a deeply human portrait of grief, love, and perseverance.",
-      "source": "youtube",
-      "videoId": "gOuXiH49-_I",
-      "thumbnail": "https://img.youtube.com/vi/gOuXiH49-_I/maxresdefault.jpg",
-      "category": [
-        "drama",
-        "short"
-      ],
-      "channel": "Omeleto",
-      "duration": "PT17M31S",
-      "durationLabel": "17:31",
-      "year": 2026,
-      "tags": [
-        "drama",
-        "short-film",
-        "award-winning"
-      ],
-      "aiGenerated": false,
-      "featured": false,
-      "staffPick": false
-    },
-    {
-      "@type": "Movie",
-      "id": "omeleto-earmark",
-      "title": "Earmark",
-      "description": "Mark has lived with moderate hearing loss since childhood, but at a routine checkup, he learns his condition is deteriorating — and must decide how to face a quieter future.",
-      "source": "youtube",
-      "videoId": "5zMX4lxVzNI",
-      "thumbnail": "https://img.youtube.com/vi/5zMX4lxVzNI/maxresdefault.jpg",
-      "category": [
-        "drama",
-        "short"
-      ],
-      "channel": "Omeleto",
-      "duration": "PT11M7S",
-      "durationLabel": "11:07",
       "year": 2026,
       "tags": [
         "drama",
